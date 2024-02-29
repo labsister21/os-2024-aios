@@ -29,10 +29,11 @@ Project is: _in progress_.
 
 
 ## Acknowledgements
-- This project was based on [Tugas Besar IF2230 - Sistem Operasi "Operating Sister”](https://docs.google.com/document/d/1X_tgtBZ0KwjRRfyjQmozmAY3Q74JqgWiRd0Ag1a34G8/edit)
+- This project was based on ["Book I: Protected Mode x86 IF2230 - Sistem Operasi 2nd Edition”](https://docs.google.com/document/d/1EafdqpKWpYpU08w8AmKrEDCedrh8PvnGJ3bJWZEeFPU/edit)
 - Many thanks to everyone who's helped us in developing this assignment.
 
 
 ## Links
 - [Tugas Besar IF2230 - Sistem Operasi "Operating Sister”](https://docs.google.com/document/d/1X_tgtBZ0KwjRRfyjQmozmAY3Q74JqgWiRd0Ag1a34G8/edit)
+- ["Book I: Protected Mode x86 IF2230 - Sistem Operasi 2nd Edition”](https://docs.google.com/document/d/1EafdqpKWpYpU08w8AmKrEDCedrh8PvnGJ3bJWZEeFPU/edit)
 - [This Repository](https://github.com/labsister21/os-2024-aios/)
