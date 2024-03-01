@@ -14,12 +14,11 @@ void framebuffer_set_cursor(uint8_t r, uint8_t c) {
 }
 
 void framebuffer_write(uint8_t row, uint8_t col, char c, uint8_t fg, uint8_t bg) {
-     uint16_t attrib = (bg << 4) | (fg & 0x0F);
-     volatile uint8_t * where;
-     where = FRAMEBUFFER_MEMORY_OFFSET + (row * 80 + col);
-     *where = c | (attrib << 8);
+     uint16_t pos = row * 80 + col;
+     FRAMEBUFFER_MEMORY_OFFSET[pos] = c;
+     FRAMEBUFFER_MEMORY_OFFSET[pos + 1] = (bg << 4) | (fg & 0x0F);
 }
 
 void framebuffer_clear(void) {
-    memset(FRAMEBUFFER_MEMORY_OFFSET, 0, sizeof(uint8_t*));
+    memset(FRAMEBUFFER_MEMORY_OFFSET, 0x7000, sizeof(uint8_t)*2000);
 }
