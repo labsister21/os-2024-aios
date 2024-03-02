@@ -1,4 +1,5 @@
 #include "header/cpu/interrupt.h"
+#include "header/cpu/portio.h"
 
 void io_wait(void) {
     out(0x80, 0);
