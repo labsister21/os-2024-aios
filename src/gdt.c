@@ -61,5 +61,5 @@ struct GlobalDescriptorTable global_descriptor_table = {
  * From: https://wiki.osdev.org/Global_Descriptor_Table, GDTR.size is GDT size minus 1.
  */
 struct GDTR _gdt_gdtr = {
-    sizeof(global_descriptor_table), &global_descriptor_table
+    sizeof(global_descriptor_table) - 1, &global_descriptor_table
 };
