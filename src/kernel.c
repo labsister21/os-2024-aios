@@ -16,16 +16,18 @@ void kernel_setup(void) {
     framebuffer_set_cursor(3, 10);
     */
     pic_remap();
-    activate_keyboard_interrupt();
     initialize_idt();
+    activate_keyboard_interrupt();
     framebuffer_clear();
     framebuffer_set_cursor(0, 0);
     
     int col = 0;
     keyboard_state_activate();
     while(true){
-        char c;
+        char c = '\0';
         get_keyboard_buffer(&c);
-        framebuffer_write(0, col++, c, 0xF, 0);
+        if (c != '\0'){
+            framebuffer_write(0, col++, c, 0xF, 0);
+        }
     }
 }
