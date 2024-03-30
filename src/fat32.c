@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
-#include <stddef.h>>
+#include <stddef.h>
 #include "header/stdlib/string.h"
 #include "header/filesystem/fat32.h"
 

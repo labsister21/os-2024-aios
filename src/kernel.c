@@ -4,7 +4,6 @@
 #include "header/kernel-entrypoint.h"
 #include "header/text/framebuffer.h"
 #include "header/driver/keyboard.h"
-
 void kernel_setup(void) {
     load_gdt(&_gdt_gdtr);
     /*
@@ -47,10 +46,9 @@ void kernel_setup(void) {
                     if (col < 0){
                         row--;
                         col = 79;
-                        while(framebuffer_read(row,col) == '\0'){
+                        while(framebuffer_read(row,col) == '\0' && col != 0){
                             col--;
                         }
-                        col++;
                         if (row <= 0){
                             row = 0;
                         }
