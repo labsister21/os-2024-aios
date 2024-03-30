@@ -34,17 +34,15 @@ void kernel_setup(void) {
             } else if (c == '\t'){
                 col += 4;
                 framebuffer_set_cursor(row, col);
-            // } else if (c == '\b'){
-            //     col--;
-            //     if (col < 0){
-            //         row--;
-            //         col = sizeof(FRAMEBUFFER_MEMORY_OFFSET[row])/sizeof(FRAMEBUFFER_MEMORY_OFFSET[row][0]);
-            //     }
-            //     framebuffer_set_cursor(row, col);
-            } 
-            else{
-                framebuffer_write(row, col++, c, 0xF, 0);
+            } else if (c == '\b'){
+                framebuffer_write(row, col, '\0', 0xF, 0);
+                col--;
                 framebuffer_set_cursor(row, col);
+            }
+            else{
+                framebuffer_write(row, col, c, 0xF, 0);
+                framebuffer_set_cursor(row, col);
+                col++;
             }
         }
     }
