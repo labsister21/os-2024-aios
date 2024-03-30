@@ -4,6 +4,7 @@
 #include "header/kernel-entrypoint.h"
 #include "header/text/framebuffer.h"
 #include "header/driver/keyboard.h"
+#include "header/driver/disk.h"
 void kernel_setup(void) {
     load_gdt(&_gdt_gdtr);
     /*
@@ -24,6 +25,12 @@ void kernel_setup(void) {
     keyboard_state_activate();
     framebuffer_write(row, col, '\0', 0xF, 0);
     framebuffer_set_cursor(0,0);
+
+    // TES disk driver
+    struct BlockBuffer b;
+    for (int i = 0; i < 512; i++) b.buf[i] = i % 16;
+    write_blocks(&b, 17, 1);
+    
     while(true){
         char c = '\0';
         get_keyboard_buffer(&c);
