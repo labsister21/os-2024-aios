@@ -19,3 +19,8 @@ void framebuffer_write(uint8_t row, uint8_t col, char c, uint8_t fg, uint8_t bg)
 void framebuffer_clear(void){
     memset(FRAMEBUFFER_MEMORY_OFFSET, 0x7000, sizeof(uint8_t)*2000);
 }
+
+char framebuffer_read(uint8_t row, uint8_t col){
+    uint16_t pos = row * 80 + col;
+    return FRAMEBUFFER_MEMORY_OFFSET[pos * 2];
+}
