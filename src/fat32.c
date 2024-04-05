@@ -200,4 +200,60 @@ int8_t write(struct FAT32DriverRequest request){
 
 int8_t delete(struct FAT32DriverRequest request){
     // OPTIONAL
+    read_clusters(&driver_state.dir_table_buf, request.parent_cluster_number, 1);
+    struct FAT32DirectoryEntry *table = driver_state.dir_table_buf.table;
+
+    for(uint8_t i = 1; i < (CLUSTER_SIZE / sizeof(struct FAT32DirectoryEntry)); i ++){
+        if (table[i].user_attribute == UATTR_NOT_EMPTY && memcmp(request.name, table[i].name,8) == 0){
+            // entry adalah directory
+            if(table[i].attribute){
+                struct FAT32DirectoryTable dirTable;
+                read_clusters(&dirTable, table[i].cluster_low, 1);
+                for (unsigned int i = 1 ; i < (CLUSTER_SIZE / sizeof(struct FAT32DirectoryEntry)); i++){
+                    // cek kalo ga empty
+                    if(dirTable.table[i].user_attribute == UATTR_NOT_EMPTY){
+                        return 2;
+                    }
+                }
+                driver_state.fat_table.cluster_map[table[i].cluster_low] = 0;
+                table[i].user_attribute = !UATTR_NOT_EMPTY;
+                write_clusters(&driver_state.dir_table_buf, request.parent_cluster_number, 1);
+                write_clusters(&driver_state.fat_table,1 ,1);
+                return 0;
+            } 
+            // entry adalah file
+            else{
+                if( memcmp(table[i].ext, request.ext,3) == 0){
+                    table[i].user_attribute = !UATTR_NOT_EMPTY;
+                    write_clusters(&driver_state.dir_table_buf, request.parent_cluster_number,1);
+                    
+                    uint16_t temp = 0;
+                    if(table[i].filesize % CLUSTER_SIZE == 0){
+                        temp = table[i].filesize / CLUSTER_SIZE;
+                    } else{
+                        temp = (table[i].filesize / CLUSTER_SIZE) +1;
+                    }
+
+                    uint16_t cluster_count = temp;
+                    uint16_t to_zeros[cluster_count];
+                    uint16_t current_cluster = table[i].cluster_low;
+
+
+                    for(uint16_t i =0; i < cluster_count; i++){
+                        to_zeros[i] = current_cluster;
+                        current_cluster = driver_state.fat_table.cluster_map[current_cluster];
+                    }
+                    for(uint16_t i =0; i < cluster_count; i++){
+                        driver_state.fat_table.cluster_map[to_zeros[i]] = 0;
+                    }
+
+                    write_clusters(&driver_state.fat_table,1,1);
+                    return 0;
+                } else{
+                    //do nothing
+                }
+            }
+        }
+    }
+    return 1;
 }
