@@ -196,6 +196,8 @@ int8_t write(struct FAT32DriverRequest request){
     write_clusters(driver_state.fat_table.cluster_map, 1, 1);
     // Update parent's Directory table
     write_clusters(table, request.parent_cluster_number, 1);
+    
+    return 0;
 }
 
 int8_t delete(struct FAT32DriverRequest request){
