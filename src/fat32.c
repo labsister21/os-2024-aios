@@ -77,6 +77,18 @@ void read_clusters(void *ptr, uint32_t cluster_number, uint8_t cluster_count){
 
 int8_t read_directory(struct FAT32DriverRequest request){
     read_clusters(&driver_state.dir_table_buf, request.parent_cluster_number, 1);
+    if(!(driver_state.dir_table_buf.table->user_attribute == UATTR_NOT_EMPTY)){
+        return -1;
+    }
+    for (int i = 0; i<(CLUSTER_SIZE / sizeof(struct FAT32DirectoryEntry));i++){
+        if(memcmp(driver_state.dir_table_buf.table[i].name, request.name,8)){
+            if (driver_state.dir_table_buf.table[i].attribute != ATTR_SUBDIRECTORY){
+                return 1;
+            } else{
+                return 0;
+            }
+        }
+    }
 }
 
 int8_t read(struct FAT32DriverRequest request){
@@ -100,6 +112,7 @@ int8_t read(struct FAT32DriverRequest request){
                     cluster_number = driver_state.fat_table.cluster_map[cluster_number];
                     counter++;
                 }
+                return 0;
             }
         }else{
             return 2;
