@@ -26,6 +26,7 @@ void init_directory_table(struct FAT32DirectoryTable *dir_table, char *name, uin
     // Entry-0 contains self (attr name = name)
     memcpy(table[0].name, name, 8);
     table[0].user_attribute = UATTR_NOT_EMPTY;
+    table[0].attribute = ATTR_SUBDIRECTORY;
 
     // Entry-1 contains parent dir
     table[1].user_attribute = UATTR_NOT_EMPTY;
@@ -42,7 +43,7 @@ void init_directory_table(struct FAT32DirectoryTable *dir_table, char *name, uin
 bool is_empty_storage(void){
     struct BlockBuffer block;
     read_blocks(block.buf, BOOT_SECTOR, 1);
-    return !memcmp(block.buf, fs_signature, BLOCK_SIZE);
+    return memcmp(block.buf, fs_signature, BLOCK_SIZE) != 0;
 }
 
 void create_fat32(void){
@@ -58,6 +59,21 @@ void create_fat32(void){
 
     write_clusters(&driver_state.fat_table, 1, 1);
     init_directory_table(&driver_state.dir_table_buf, "root", 2);
+    write_clusters(&driver_state.dir_table_buf.table, 2, 1);
+    // initialize root directory and write it to cluster 2
+    // struct FAT32DirectoryTable rootDir = {
+    //     .table = {
+    //         {
+    //         .name = {'r','o','o','t'},
+    //         .attribute = ATTR_SUBDIRECTORY,
+    //         .user_attribute = UATTR_NOT_EMPTY,
+    //         .cluster_high = 0x00,
+    //         .cluster_low = 0x02,
+    //         .filesize = 0 
+    //         }
+    //     }
+    // };
+    // write_clusters(rootDir.table, 2, 1);
 }
 
 void initialize_filesystem_fat32(void){
@@ -131,7 +147,7 @@ int8_t write(struct FAT32DriverRequest request){
     read_clusters(&driver_state.fat_table.cluster_map, FAT_CLUSTER_NUMBER, 1);
 
     // Check if the parent directory is valid and is a directory
-    if(!(driver_state.dir_table_buf.table[0].user_attribute == UATTR_NOT_EMPTY) || !(driver_state.dir_table_buf.table[0].attribute == ATTR_SUBDIRECTORY)){
+    if(!(driver_state.dir_table_buf.table[0].user_attribute == UATTR_NOT_EMPTY)){
         return 2;
     }
     
@@ -148,7 +164,7 @@ int8_t write(struct FAT32DriverRequest request){
 
     // Check if there is a file with the same name or if the directory table is full
     for (int i = 2; i < 64; i++) {
-        if (table[i].user_attribute != UATTR_NOT_EMPTY){
+        if (table[i].user_attribute != UATTR_NOT_EMPTY && available_clusters != required_clusters){
             // Find available clusters in FAT Table
             for (int j = 3; j < 512; j++) {
                 if (driver_state.fat_table.cluster_map[j] == FAT32_FAT_EMPTY_ENTRY){
