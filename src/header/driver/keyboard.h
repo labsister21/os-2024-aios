@@ -60,5 +60,5 @@ void get_keyboard_buffer(char *buf);
  * Will start listen and process keyboard scancode if keyboard_input_on.
  */
 void keyboard_isr(void);
-
+void keyboard_do_something(int* row, int* col, char c);
 #endif

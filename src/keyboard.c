@@ -53,3 +53,46 @@ void keyboard_isr(void){
         return;
     }
 }
+void keyboard_do_something(int *row, int* col, char c){
+    if (c != '\0'){
+        if (c == '\n'){
+            (*row)++,  *col=0;
+            framebuffer_write(*row, *col, '\0', 0xF, 0);
+            framebuffer_set_cursor(*row, *col);
+        } else if (c == '\t'){
+            *col += 4;
+            if(*col>=80){
+                (*row)++;
+                *col = 0;
+            }
+            framebuffer_write(*row, *col, '\0', 0xF, 0);
+            framebuffer_set_cursor(*row, *col);
+        } else if (c == '\b'){
+            if(!(*col == 0 && *row == 0)){
+                (*col)--;
+                if (*col < 0){
+                    (*row)--;
+                    (*col) = 79;
+                    while(framebuffer_read(*row,*col) == '\0' && *col != 0){
+                        (*col)--;
+                    }
+                    if (*row <= 0){
+                        *row = 0;
+                    }
+                } 
+                framebuffer_write(*row, *col, '\0', 0xF, 0);
+                framebuffer_set_cursor(*row, *col);
+            }        
+        }
+        else{
+            framebuffer_write(*row, *col, c, 0xF, 0);
+            (*col)++;
+            if(*col==80){
+                (*row)++;
+                *col = 0;
+            }
+            framebuffer_write(*row, *col, '\0', 0xF, 0);
+            framebuffer_set_cursor(*row, *col);
+        }
+    }
+}

@@ -34,46 +34,6 @@ void kernel_setup(void) {
     while(true){
         char c = '\0';
         get_keyboard_buffer(&c);
-        if (c != '\0'){
-            if (c == '\n'){
-                row++, col=0;
-                framebuffer_write(row, col, '\0', 0xF, 0);
-                framebuffer_set_cursor(row, col);
-            } else if (c == '\t'){
-                col += 4;
-                if(col>=80){
-                    row++;
-                    col = 0;
-                }
-                framebuffer_write(row, col, '\0', 0xF, 0);
-                framebuffer_set_cursor(row, col);
-            } else if (c == '\b'){
-                if(!(col == 0 && row == 0)){
-                    col--;
-                    if (col < 0){
-                        row--;
-                        col = 79;
-                        while(framebuffer_read(row,col) == '\0' && col != 0){
-                            col--;
-                        }
-                        if (row <= 0){
-                            row = 0;
-                        }
-                    } 
-                    framebuffer_write(row, col, '\0', 0xF, 0);
-                    framebuffer_set_cursor(row, col);
-                }        
-            }
-            else{
-                framebuffer_write(row, col, c, 0xF, 0);
-                col++;
-                if(col==80){
-                    row++;
-                    col = 0;
-                }
-                framebuffer_write(row, col, '\0', 0xF, 0);
-                framebuffer_set_cursor(row, col);
-            }
-        }
+        keyboard_do_something(&row, &col, c);
     }
 }
