@@ -5,16 +5,10 @@
 #include "header/text/framebuffer.h"
 #include "header/driver/keyboard.h"
 #include "header/driver/disk.h"
+#include "header/filesystem/fat32.h"
+#include "header/memory/paging.h"
 void kernel_setup(void) {
     load_gdt(&_gdt_gdtr);
-    /*
-    framebuffer_clear();
-    framebuffer_write(3, 8,  'H', 0, 0xF);
-    framebuffer_write(3, 9,  'a', 0, 0xF);
-    framebuffer_write(3, 10, 'i', 0, 0xF);
-    framebuffer_write(3, 11, '!', 0, 0xF);
-    framebuffer_set_cursor(3, 10);
-    */
     pic_remap();
     initialize_idt();
     activate_keyboard_interrupt();
@@ -26,10 +20,29 @@ void kernel_setup(void) {
     framebuffer_write(row, col, '\0', 0xF, 0);
     framebuffer_set_cursor(0,0);
 
-    // TES disk driver
-    struct BlockBuffer b;
-    for (int i = 0; i < 512; i++) b.buf[i] = i % 16;
-    write_blocks(&b, 17, 1);
+    // // TES disk driver
+    // struct BlockBuffer b;
+    // for (int i = 0; i < 512; i++) b.buf[i] = i % 16;
+    // write_blocks(&b, 17, 1);
+    initialize_filesystem_fat32();
+    gdt_install_tss();
+    set_tss_register();
+    // Allocate first 4 MiB virtual memory
+    paging_allocate_user_page_frame(&_paging_kernel_page_directory, (uint8_t*) 0);
+    // Write shell into memory
+    struct FAT32DriverRequest request = {
+        .buf                   = (uint8_t*) 0,
+        .name                  = "shell",
+        .ext                   = "\0\0\0",
+        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+        .buffer_size           = 0x100000,
+    };
+    read(request);
+
+    // Set TSS $esp pointer and jump into shell 
+    set_tss_kernel_current_stack();
+    kernel_execute_user_program((uint8_t*) 0);
+
     
     while(true){
         char c = '\0';
