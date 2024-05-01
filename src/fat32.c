@@ -147,7 +147,7 @@ int8_t write(struct FAT32DriverRequest request){
     read_clusters(&driver_state.fat_table.cluster_map, FAT_CLUSTER_NUMBER, 1);
 
     // Check if the parent directory is valid and is a directory
-    if(!(driver_state.dir_table_buf.table[0].user_attribute == UATTR_NOT_EMPTY)){
+    if(!(driver_state.dir_table_buf.table[0].user_attribute == UATTR_NOT_EMPTY) || !(driver_state.dir_table_buf.table[0].attribute == ATTR_SUBDIRECTORY)){
         return 2;
     }
     
