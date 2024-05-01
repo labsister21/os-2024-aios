@@ -14,14 +14,14 @@ static struct GlobalDescriptorTable global_descriptor_table = {
             0, // base_mid
             0, // type_bit
             0, // non_system
-            0, // desc_priv_lvl
-            0, // segment_present
-            0, // segment_mid
+            0, // privilage
+            0, // valid_bit
+            0, // segment_high
             0, // available
-            0, // L
-            0, // default_op_size
+            0, // Long_mode
+            0, // opr_32_bit
             0, // granularity
-            0  //base high
+            0  // base high
         },
         {
             0xFFFF, // segment_low
@@ -29,14 +29,14 @@ static struct GlobalDescriptorTable global_descriptor_table = {
             0,      // base_mid
             0xA,    // type_bit
             1,      // non_system
-            0,      // desc_priv_lvl
-            1,      // segment_present
-            0xF,    // segment_mid
+            0,      // privilage
+            1,      // valid_bit
+            0xF,    // segment_high
             0,      // available
-            0,      // L
-            1,      // default_op_size
+            0,      // Long_mode
+            1,      // opr_32_bit
             1,      // granularity
-            0       //base high
+            0       // base high
         },
         {
             0xFFFF, // segment_low
@@ -44,14 +44,14 @@ static struct GlobalDescriptorTable global_descriptor_table = {
             0,      // base_mid
             0x2,    // type_bit
             1,      // non_system
-            0,      // desc_priv_lvl
-            1,      // segment_present
-            0xF,    // segment_mid
+            0,      // privilage
+            1,      // valid_bit
+            0xF,    // segment_high
             0,      // available
-            0,      // L
-            1,      // default_op_size
+            0,      // Long_mode
+            1,      // opr_32_bit
             1,      // granularity
-            0       //base high
+            0       // base high
         },
         {
             0xFFFF, // segment_low
@@ -59,42 +59,43 @@ static struct GlobalDescriptorTable global_descriptor_table = {
             0,      // base_mid
             0xA,    // type_bit
             1,      // non_system
-            0x3,    // desc_priv_lvl
-            1,      // segment_present
-            0xF,    // segment_mid
+            0x3,    // privilage
+            1,      // valid_bit
+            0xF,    // segment_high
             0,      // available
-            0,      // L
-            1,      // default_op_size
+            0,      // Long_mode
+            1,      // opr_32_bit
             1,      // granularity
-            0       //base high
+            0       // base high
         },
         {
-				    0xFFFF, // segment_low
+			0xFFFF, // segment_low
             0,      // base_low
             0,      // base_mid
             0x2,    // type_bit
             1,      // non_system
-            0x3,    // desc_priv_lvl
-            1,      // segment_present
-            0xF,    // segment_mid
+            0x3,    // privilage
+            1,      // valid_bit
+            0xF,    // segment_high
             0,      // available
-            0,      // L
-            1,      // default_op_size
+            0,      // Long_mode
+            1,      // opr_32_bit
             1,      // granularity
-            0       //base high
+            0       // base high
         },
         {
-            .segment_high	= (sizeof(struct TSSEntry) & (0xF << 16)) >> 16,
-            .segment_low	= sizeof(struct TSSEntry),
-            .base_high		= 0,
-            .base_low			= 0,
-            .non_system		= 0,		// S bit
-            .type_bit			= 0x9,
-            .privilege		= 0,		// DPL
-            .valid_bit		= 1,		// P bit
-            .opr_32_bit		= 1,		// D/B bit
-            .long_mode		= 0,		// L bit
-            .granularity	= 0,		// G bit
+            .segment_high	    = (sizeof(struct TSSEntry) & (0xF << 16)) >> 16,
+            .segment_low	    = sizeof(struct TSSEntry),
+            .base_high		    = 0,
+            .base_mid		    = 0,
+            .base_low		    = 0,
+            .non_system		    = 0,		// S bit
+            .type_bit		    = 0x9,
+            .privilege  	    = 0,		// DPL
+            .valid_bit      	= 1,		// P bit
+            .opr_32_bit 	    = 1,		// D/B bit
+            .long_mode          = 0,		// L bit
+            .granularity	    = 0,		// G bit
         },
         {0}
     }

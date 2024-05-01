@@ -37,14 +37,14 @@ struct SegmentDescriptor {
     uint8_t base_mid;
     uint8_t type_bit        : 4;
     uint8_t non_system      : 1;
-    uint8_t desc_priv_lvl   : 2;
-    uint8_t segment_present : 1;
+    uint8_t privilege       : 2;
+    uint8_t valid_bit       : 1;
     
     // Next 16-bit (Bit 48 to 64)
-    uint8_t segment_mid     : 4;
+    uint8_t segment_high    : 4;
     uint8_t available       : 1;
-    uint8_t L               : 1;
-    uint8_t default_op_size : 1;
+    uint8_t long_mode       : 1;
+    uint8_t opr_32_bit      : 1;
     uint8_t granularity     : 1;
     uint8_t base_high;
 
