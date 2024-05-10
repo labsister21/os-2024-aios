@@ -112,7 +112,6 @@ int8_t read_directory(struct FAT32DriverRequest request){
 }
 
 int8_t read(struct FAT32DriverRequest request){
-    // OPTIONAL
     read_clusters(&driver_state.dir_table_buf.table, request.parent_cluster_number, 1);
     if(!(driver_state.dir_table_buf.table->user_attribute == UATTR_NOT_EMPTY)){
         return -1;
@@ -136,7 +135,7 @@ int8_t read(struct FAT32DriverRequest request){
             }
         }
     }
-    return -1;
+    return 2;
 }
 
 int8_t write(struct FAT32DriverRequest request){
@@ -233,7 +232,6 @@ int8_t write(struct FAT32DriverRequest request){
 }
 
 int8_t delete(struct FAT32DriverRequest request){
-    // OPTIONAL
     read_clusters(&driver_state.dir_table_buf, request.parent_cluster_number, 1);
     struct FAT32DirectoryEntry *table = driver_state.dir_table_buf.table;
 
