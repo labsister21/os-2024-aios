@@ -45,8 +45,8 @@ void kernel_setup(void) {
     kernel_execute_user_program((uint8_t*) 0);
       
     while(true){
-        char c = '\0';
-        get_keyboard_buffer(&c);
-        keyboard_do_something(&row, &col, c);
+        // char c = '\0';
+        // get_keyboard_buffer(&c);
+        // keyboard_do_something(&row, &col, c);
     }
 }
