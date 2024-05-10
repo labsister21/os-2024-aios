@@ -17,7 +17,7 @@ const uint8_t fs_signature[BLOCK_SIZE] = {
 };
 
 uint32_t cluster_to_lba(uint32_t cluster){
-    return cluster * CLUSTER_SIZE;
+    return cluster * CLUSTER_BLOCK_COUNT;
 }
 
 void init_directory_table(struct FAT32DirectoryTable *dir_table, char *name, uint32_t parent_dir_cluster){

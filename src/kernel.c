@@ -24,6 +24,7 @@ void kernel_setup(void) {
     // struct BlockBuffer b;
     // for (int i = 0; i < 512; i++) b.buf[i] = i % 16;
     // write_blocks(&b, 17, 1);
+    // write_clusters(&b, 4, 1);
     initialize_filesystem_fat32();
     gdt_install_tss();
     set_tss_register();
