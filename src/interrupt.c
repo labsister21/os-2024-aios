@@ -85,7 +85,7 @@ void syscall(struct InterruptFrame frame) {
             break;
         case 5:
             puts_char(
-                'c', 
+                *((char*)frame.cpu.general.ebx), 
                 frame.cpu.general.ecx
             );
             break;
@@ -97,7 +97,6 @@ void syscall(struct InterruptFrame frame) {
             ); // Assuming puts() exist in kernel
             break;
         case 7: 
-            activate_keyboard_interrupt();
             keyboard_state_activate();
             break;
     }

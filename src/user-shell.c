@@ -28,6 +28,7 @@ int main(void) {
     char buf;
     syscall(7, 0, 0, 0);
     while (true) {
+        buf = '\0';
         syscall(4, (uint32_t) &buf, 0, 0);
         syscall(5, (uint32_t) &buf, 0xF, 0);
     }
