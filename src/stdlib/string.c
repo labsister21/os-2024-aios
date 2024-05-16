@@ -1,3 +1,4 @@
+#include <cstring>
 #include <stdint.h>
 #include <stddef.h>
 #include "header/stdlib/string.h"
@@ -40,6 +41,12 @@ void *memmove(void *dest, const void *src, size_t n) {
         for (size_t i = n; i != 0; i--)
             dstbuf[i-1] = srcbuf[i-1];
     }
-
     return dest;
+}
+
+size_t strlen(char *string) {
+    size_t i = 0;
+    while (string[i] != '\0')
+        i++;
+    return i;
 }
