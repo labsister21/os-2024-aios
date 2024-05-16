@@ -1,4 +1,3 @@
-#include <cstring>
 #include <stdint.h>
 #include <stddef.h>
 #include "header/stdlib/string.h"
