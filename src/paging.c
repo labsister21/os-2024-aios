@@ -56,10 +56,27 @@ struct PageDirectory* paging_create_new_page_directory(void) {
     for(uint8_t i = 0; i < PAGING_DIRECTORY_TABLE_MAX_COUNT; i++) {
         if(!page_directory_manager.page_directory_used[i]) {
             page_directory_manager.page_directory_used[i] = true;
-            // TODO: please continue, I gave up after hours of thinking
+            struct PageDirectory insert = {
+                .table = {
+                    [0] = {
+                        .flag.present_bit       = 1,
+                        .flag.write_bit         = 1,
+                        .flag.use_pagesize_4_mb = 1,
+                        .lower_address          = 0,
+                    },
+                    [0x300] = {
+                        .flag.present_bit       = 1,
+                        .flag.write_bit         = 1,
+                        .flag.use_pagesize_4_mb = 1,
+                        .lower_address          = 0,
+                    }
+                }
+            };
+            flush_single_tlb(&page_directory_list[i]);
+            page_directory_list[i] = insert;
+            return &page_directory_list[i];
         }
     }
-    return NULL;
 }
 
 struct PageDirectory* paging_get_current_page_directory_addr(void) {
