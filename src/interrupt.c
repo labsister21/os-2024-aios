@@ -88,6 +88,7 @@ void syscall(struct InterruptFrame frame) {
                 *((char*)frame.cpu.general.ebx), 
                 frame.cpu.general.ecx
             );
+            *((char*)frame.cpu.general.ebx) = 0;
             break;
         case 6:
             puts(
@@ -98,6 +99,9 @@ void syscall(struct InterruptFrame frame) {
             break;
         case 7: 
             keyboard_state_activate();
+            break;
+        case 8:
+            read_clusters((struct FAT32DirectoryTable*) frame.cpu.general.ebx, (int) frame.cpu.general.ecx, 1);
             break;
     }
 }

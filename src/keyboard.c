@@ -38,8 +38,8 @@ void keyboard_state_deactivate(void){
 void get_keyboard_buffer(char *buf){
     if(keyboard_state.keyboard_input_on && !keyboard_state.isBufferEmpty){
         *buf = keyboard_state.keyboard_buffer;
-        keyboard_state.keyboard_buffer = (char) 0;
         keyboard_state.isBufferEmpty = true;
+        keyboard_state.keyboard_buffer = (char) 0;
     }
 }
 

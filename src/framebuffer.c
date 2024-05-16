@@ -42,16 +42,6 @@ void go_scroll()
 }
 
 void puts_char(char c, uint32_t color) {
-    // if (c != '\n')
-    //     framebuffer_write(framebuffer_current_state.row, framebuffer_current_state.col, c, color, 0);
-    // if (c=='\n' || framebuffer_current_state.col == 80-1) {
-    //     framebuffer_current_state.col = 0;
-    //     framebuffer_current_state.row ++;
-    //     if (framebuffer_current_state.row == 25)
-    //         go_scroll();
-    // } else {
-    //     framebuffer_current_state.col++;
-    // }
     if (c != '\0'){
         if (c == '\n'){
             (framebuffer_current_state.row)++,  framebuffer_current_state.col=0;
