@@ -3,7 +3,8 @@
 #include "header/stdlib/string.h"
 #include "header/cpu/gdt.h"
 
-
+extern struct PageManagerState process_manager_state;
+static struct ProcessControlBlock _process_list[PROCESS_COUNT_MAX];
 
 int32_t process_create_user_process(struct FAT32DriverRequest request) {
     int32_t retcode = PROCESS_CREATE_SUCCESS; 
