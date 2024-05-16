@@ -77,6 +77,7 @@ struct PageDirectory* paging_create_new_page_directory(void) {
             return &page_directory_list[i];
         }
     }
+    return NULL;
 }
 
 struct PageDirectory* paging_get_current_page_directory_addr(void) {
