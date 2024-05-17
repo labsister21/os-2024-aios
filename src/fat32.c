@@ -243,12 +243,16 @@ int8_t delete(struct FAT32DriverRequest request){
         } if (memcmp(request.name, table[i].name,8) == 0){
             // entry adalah directory
 
-            if(table[i].attribute){
+            if(table[i].attribute == ATTR_SUBDIRECTORY){
                 struct FAT32DirectoryTable dirTable;
-                read_clusters(&dirTable, table[i].cluster_low, 1);
-                for (unsigned int i = 1 ; i < (CLUSTER_SIZE / sizeof(struct FAT32DirectoryEntry)); i++){
+                uint32_t cluster_number = (dirTable.table[i].cluster_high << 16 | dirTable.table[i].cluster_low);
+                if (cluster_number == ROOT_CLUSTER_NUMBER) {
+                    return -1;
+                }
+                read_clusters(&dirTable, cluster_number, 1);
+                for (int j = 2 ; j < 64; j++){
                     // cek kalo ga empty
-                    if(dirTable.table[i].user_attribute == UATTR_NOT_EMPTY){
+                    if(dirTable.table[j].user_attribute == UATTR_NOT_EMPTY){
                         return 2;
                     }
                 }

@@ -10,7 +10,7 @@ void mkdir(char argv[4][100], int argc){
         return;
     } else {
         int startDir = currentDirectory;
-        int retval = cd((char (*)[100]) argv, argc, false);
+        int retval = cd(argv, argc, false);
         if (retval != 0) {
             return;
         }

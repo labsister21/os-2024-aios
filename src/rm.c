@@ -10,7 +10,7 @@ void rm(char argv[4][100], int argc){
         return;
     } else {
         int startDir = currentDirectory;
-        int retval = cd((char (*)[100]) argv, argc, false);
+        int retval = cd(argv, argc, false);
         if (retval != 0) {
             return;
         }
@@ -23,11 +23,11 @@ void rm(char argv[4][100], int argc){
         request.parent_cluster_number = currentDirectory;
         retval = delete(request);
         if (retval == 1) {
-            print("Error: Directory exists\n", 0xF);
+            print("Error: file/directory does not exists\n", 0xF);
         } else if (retval == 2) {
-            print("Error: Parent directory invalid\n", 0xF);
+            print("Error: folder tidak kosong\n", 0xF);
         } else if (retval == -1) {
-            print("Error: Unknown error", 0xF);
+            print("Error: root tidak dapat dihapus\n", 0xF);
         }
         currentDirectory = startDir;
         return;

@@ -7,6 +7,7 @@
 #include "header/user/ls.h"
 #include "header/user/cat.h"
 #include "header/user/rm.h"
+#include "header/user/find.h"
 
 void syscall(uint32_t eax, uint32_t ebx, uint32_t ecx, uint32_t edx) {
     __asm__ volatile("mov %0, %%ebx" : /* <Empty> */ : "r"(ebx));
@@ -100,16 +101,6 @@ int findDirEntryIndex(char* entryName) {
     return -1;
 }
 
-int findFileEntryIndex(char* entryName) {
-    for (int i = 0; i < 64; i++) {
-        if (memcmp(dirTable.table[i].name, entryName, 8) == 0 && 
-            dirTable.table[i].user_attribute != UATTR_NOT_EMPTY) {
-            return i;
-        }
-    }
-    return -1;
-}
-
 void parsePath(char* path, char output[16][10], int* wordCount) {
     for (int k = 0; k < 16; k++) {
         for (int l = 0; l < 10; l++) {
@@ -162,13 +153,13 @@ int currentDirectory = ROOT_CLUSTER_NUMBER;
 struct FAT32DirectoryTable dirTable;
 
 int main(void) {
-    struct ClusterBuffer      cl[2]   = {0};
+    struct ClusterBuffer      cl[12]   = {0};
     struct FAT32DriverRequest request = {
         .buf                   = &cl,
         .name                  = "shell",
         .ext                   = "\0\0\0",
         .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-        .buffer_size           = 2*CLUSTER_SIZE,
+        .buffer_size           = 12*CLUSTER_SIZE,
     };
     int32_t retcode;
     syscall(0, (uint32_t) &request, (uint32_t) &retcode, 0);
@@ -240,13 +231,11 @@ int main(void) {
             print(argv[0], 0xF);
         } else if (memcmp(argv[0], "rm", strlen(argv[0])) == 0) {
             rm(argv, argc);
-            // print(argv[0], 0xF);
         } else if (memcmp(argv[0], "mv", strlen(argv[0])) == 0) {
             // mv(argv, argc);
             print(argv[0], 0xF);
         } else if (memcmp(argv[0], "find", strlen(argv[0])) == 0) {
-            // find(argv, argc);
-            print(argv[0], 0xF);
+            find(argv, argc);
         } else if (argc == 0) {
             // Do nothing
         } else {
