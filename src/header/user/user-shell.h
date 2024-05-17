@@ -15,6 +15,8 @@ bool isAbsolutePath(char* path);
 
 void printDir();
 
+void updateDirectoryTable(int dirCluster);
+
 int findDirEntryClusterNumber(char* entryName);
 
 void lineParser(char* line, char argv[4][100], int* argc);
