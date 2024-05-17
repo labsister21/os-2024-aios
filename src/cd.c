@@ -1,7 +1,7 @@
 #include <stdint.h>
-#include "../header/stdlib/string.h"
-#include "../header/user/user-shell.h"
-#include "../header/user/cd.h"
+#include "header/stdlib/string.h"
+#include "header/user/user-shell.h"
+#include "header/user/cd.h"
 int cd(char* argv[], int argc, bool isdir){
     if(argc > 2){
         print("Error: too many arguments\n", 0xF);
@@ -9,7 +9,7 @@ int cd(char* argv[], int argc, bool isdir){
     }else{
         uint32_t search_directory_number = ROOT_CLUSTER_NUMBER;
         char* pathTemp = argv[1];
-        char* path[16];
+        char path[16][10];
         int wordCount;
         parsePath(pathTemp,path,&wordCount);
         int lenPath;

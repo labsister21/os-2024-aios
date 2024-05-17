@@ -1,8 +1,8 @@
 #include <stdint.h>
-#include "../header/stdlib/string.h"
-#include "../header/user/user-shell.h"
-#include "../header/user/cd.h"
-#include "../header/user/ls.h"
+#include "header/stdlib/string.h"
+#include "header/user/user-shell.h"
+#include "header/user/cd.h"
+#include "header/user/ls.h"
 
 
 void ls(char* argv[], int argc){
