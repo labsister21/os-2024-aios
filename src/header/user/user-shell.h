@@ -21,4 +21,6 @@ int findDirEntryIndex(char* entryName);
 
 void lineParser(char* line, char argv[4][100], int* argc);
 
+void parsePath(char* path, char output[16][10], int* wordCount);
+
 #endif

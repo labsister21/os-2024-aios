@@ -91,6 +91,25 @@ int findDirEntryIndex(char* entryName) {
     return -1;
 }
 
+void parsePath(char* path, char output[16][10], int* wordCount) {
+    int i = 0;
+    int len = strlen(path);
+    *wordCount = 1;
+    if (path[0] == '/') {
+        i++;
+    }
+    int wordIndex = 0;
+    for (; i < len; i++) {
+        if (path[i] == '/') {
+            (*wordCount)++;
+            wordIndex = 0;
+        } else {
+            output[(*wordCount)-1][wordIndex] = path[i];
+            wordIndex++;
+        }
+    }
+}
+
 int currentDirectory = ROOT_CLUSTER_NUMBER;
 struct FAT32DirectoryTable dirTable;
 
@@ -160,7 +179,13 @@ int main(void) {
         // Call functions
         if (memcmp(argv[0], "cd", strlen(argv[0])) == 0) {
             // cd(argv, argc);
+            int wordCount;
+            char output[16][10];
+            parsePath(argv[1], output, &wordCount);
             print(argv[0], 0xF);
+            for (int i = 0; i < wordCount; i++) {
+                print(output[i], 0xF);
+            }
         } else if (memcmp(argv[0], "ls", strlen(argv[0])) == 0) {
             // ls(argv, argc);
             print(argv[0], 0xF);
