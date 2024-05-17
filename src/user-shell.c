@@ -6,6 +6,7 @@
 #include "header/user/mkdir.h"
 #include "header/user/ls.h"
 #include "header/user/cat.h"
+#include "header/user/cp.h"
 #include "header/user/rm.h"
 #include "header/user/find.h"
 
@@ -227,7 +228,7 @@ int main(void) {
             cat(argv,argc);
             // print(argv[0], 0xF);
         } else if (memcmp(argv[0], "cp", strlen(argv[0])) == 0) {
-            // cp(argv, argc);
+            cp(argv, argc);
             print(argv[0], 0xF);
         } else if (memcmp(argv[0], "rm", strlen(argv[0])) == 0) {
             rm(argv, argc);
