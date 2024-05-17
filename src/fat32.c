@@ -38,6 +38,7 @@ void init_directory_table(struct FAT32DirectoryTable *dir_table, char *name, uin
     {
         table[i].user_attribute = !UATTR_NOT_EMPTY;
     }
+    write_clusters(&driver_state.dir_table_buf.table, 2, 1);
 }
 
 bool is_empty_storage(void){
@@ -59,7 +60,7 @@ void create_fat32(void){
 
     write_clusters(&driver_state.fat_table, 1, 1);
     init_directory_table(&driver_state.dir_table_buf, "root", 2);
-    write_clusters(&driver_state.dir_table_buf.table, 2, 1);
+    
     // initialize root directory and write it to cluster 2
     // struct FAT32DirectoryTable rootDir = {
     //     .table = {
