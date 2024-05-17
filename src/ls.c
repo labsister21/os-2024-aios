@@ -6,7 +6,7 @@
 
 
 void ls(char argv[4][100], int argc){
-    int curDir = currentDirectory;
+    int startDir = currentDirectory;
     int retval;
     if (argc == 1) {
         retval = 0;
@@ -14,6 +14,7 @@ void ls(char argv[4][100], int argc){
         retval = cd(argv,argc, true);
     }
     if(retval == 0){
+        updateDirectoryTable(currentDirectory);
         for(int i = 2; i < 64; i++){
             if (dirTable.table[i].user_attribute == UATTR_NOT_EMPTY){
                 if(dirTable.table[i].name[7] != '\0'){
@@ -31,5 +32,5 @@ void ls(char argv[4][100], int argc){
             }
         }
     }
-    currentDirectory = curDir;
+    currentDirectory = startDir;
 }
