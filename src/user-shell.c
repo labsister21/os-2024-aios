@@ -2,6 +2,9 @@
 #include "header/filesystem/fat32.h"
 #include "header/stdlib/string.h"
 #include "header/user/user-shell.h"
+#include "header/user/cd.h"
+#include "header/user/mkdir.h"
+#include "header/user/ls.h"
 
 void syscall(uint32_t eax, uint32_t ebx, uint32_t ecx, uint32_t edx) {
     __asm__ volatile("mov %0, %%ebx" : /* <Empty> */ : "r"(ebx));
@@ -96,6 +99,11 @@ int findDirEntryIndex(char* entryName) {
 }
 
 void parsePath(char* path, char output[16][10], int* wordCount) {
+    for (int k = 0; k < 16; k++) {
+        for (int l = 0; l < 10; l++) {
+            output[k][l] = 0;
+        }
+    }
     int i = 0;
     int len = strlen(path);
     *wordCount = 1;
@@ -142,6 +150,7 @@ int main(void) {
     syscall(7, 0, 0, 0);
     while (true) {
         // Print directory
+        updateDirectoryTable(currentDirectory);
         print("User@aiOS:", 0x5A);
         printDir();
 
@@ -182,20 +191,11 @@ int main(void) {
 
         // Call functions
         if (memcmp(argv[0], "cd", strlen(argv[0])) == 0) {
-            // cd(argv, argc);
-            int wordCount;
-            char output[16][10];
-            parsePath(argv[1], output, &wordCount);
-            print(argv[0], 0xF);
-            for (int i = 0; i < wordCount; i++) {
-                print(output[i], 0xF);
-            }
+            cd((char**) argv, argc, true);
         } else if (memcmp(argv[0], "ls", strlen(argv[0])) == 0) {
-            // ls(argv, argc);
-            print(argv[0], 0xF);
+            ls((char**) argv, argc);
         } else if (memcmp(argv[0], "mkdir", strlen(argv[0])) == 0) {
-            // mkdir(argv, argc);
-            print(argv[0], 0xF);
+            mkdir((char**) argv, argc);
         } else if (memcmp(argv[0], "cat", strlen(argv[0])) == 0) {
             // cat(argv, argc);
             print(argv[0], 0xF);
