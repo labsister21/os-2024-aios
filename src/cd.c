@@ -2,7 +2,7 @@
 #include "../header/stdlib/string.h"
 #include "../header/user/user-shell.h"
 #include "../header/user/cd.h"
-int cd(char* argv[], int argc){
+int cd(char* argv[], int argc, bool isdir){
     if(argc > 2){
         put("Error: too many arguments\n", 0xF);
         return 1;
@@ -12,7 +12,12 @@ int cd(char* argv[], int argc){
         char* path[16];
         int wordCount;
         parsePath(pathTemp,path,&wordCount);
-        int lenPath = wordCount;
+        int lenPath;
+        if(isdir){
+            lenPath = wordCount;
+        }else{
+            lenPath = wordCount-1;
+        }
         int index = 0;
         // kalo ga absolute ke current
         if(!isAbsolutePath(argv[1])){
