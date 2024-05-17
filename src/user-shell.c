@@ -5,6 +5,8 @@
 #include "header/user/cd.h"
 #include "header/user/mkdir.h"
 #include "header/user/ls.h"
+#include "header/user/cat.h"
+#include "header/user/rm.h"
 
 void syscall(uint32_t eax, uint32_t ebx, uint32_t ecx, uint32_t edx) {
     __asm__ volatile("mov %0, %%ebx" : /* <Empty> */ : "r"(ebx));
@@ -92,6 +94,16 @@ int findDirEntryIndex(char* entryName) {
     for (int i = 0; i < 64; i++) {
         if (memcmp(dirTable.table[i].name, entryName, 8) == 0 && 
             dirTable.table[i].user_attribute == UATTR_NOT_EMPTY) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int findFileEntryIndex(char* entryName) {
+    for (int i = 0; i < 64; i++) {
+        if (memcmp(dirTable.table[i].name, entryName, 8) == 0 && 
+            dirTable.table[i].user_attribute != UATTR_NOT_EMPTY) {
             return i;
         }
     }
@@ -221,14 +233,14 @@ int main(void) {
         } else if (memcmp(argv[0], "mkdir", strlen(argv[0])) == 0) {
             mkdir(argv, argc);
         } else if (memcmp(argv[0], "cat", strlen(argv[0])) == 0) {
-            // cat(argv, argc);
-            print(argv[0], 0xF);
+            cat(argv,argc);
+            // print(argv[0], 0xF);
         } else if (memcmp(argv[0], "cp", strlen(argv[0])) == 0) {
             // cp(argv, argc);
             print(argv[0], 0xF);
         } else if (memcmp(argv[0], "rm", strlen(argv[0])) == 0) {
-            // rm(argv, argc);
-            print(argv[0], 0xF);
+            rm(argv, argc);
+            // print(argv[0], 0xF);
         } else if (memcmp(argv[0], "mv", strlen(argv[0])) == 0) {
             // mv(argv, argc);
             print(argv[0], 0xF);

@@ -238,8 +238,11 @@ int8_t delete(struct FAT32DriverRequest request){
     struct FAT32DirectoryEntry *table = driver_state.dir_table_buf.table;
 
     for(uint8_t i = 1; i < (CLUSTER_SIZE / sizeof(struct FAT32DirectoryEntry)); i ++){
-        if (table[i].user_attribute == UATTR_NOT_EMPTY && memcmp(request.name, table[i].name,8) == 0){
+        if (table[i].user_attribute != UATTR_NOT_EMPTY){
+            continue;
+        } if (memcmp(request.name, table[i].name,8) == 0){
             // entry adalah directory
+
             if(table[i].attribute){
                 struct FAT32DirectoryTable dirTable;
                 read_clusters(&dirTable, table[i].cluster_low, 1);
@@ -251,6 +254,7 @@ int8_t delete(struct FAT32DriverRequest request){
                 }
                 driver_state.fat_table.cluster_map[table[i].cluster_low] = 0;
                 table[i].user_attribute = !UATTR_NOT_EMPTY;
+                table[i].undelete = true;
                 write_clusters(&driver_state.dir_table_buf, request.parent_cluster_number, 1);
                 write_clusters(&driver_state.fat_table,1 ,1);
                 return 0;
@@ -259,6 +263,7 @@ int8_t delete(struct FAT32DriverRequest request){
             else{
                 if( memcmp(table[i].ext, request.ext,3) == 0){
                     table[i].user_attribute = !UATTR_NOT_EMPTY;
+                    table[i].undelete = true;
                     write_clusters(&driver_state.dir_table_buf, request.parent_cluster_number,1);
                     
                     uint16_t temp = 0;

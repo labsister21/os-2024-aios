@@ -20,6 +20,7 @@ void printDir();
 void updateDirectoryTable(int dirCluster);
 
 int findDirEntryIndex(char* entryName);
+int findFileEntryIndex(char* entryName);
 
 void lineParser(char* line, char argv[4][100], int* argc);
 
