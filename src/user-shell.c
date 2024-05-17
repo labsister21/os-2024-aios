@@ -17,6 +17,10 @@ void print(char* string, uint32_t color) {
     syscall(6, (uint32_t) string, strlen(string), color);
 }
 
+void printlen(char* string, int length, uint32_t color) {
+    syscall(6, (uint32_t) string, length, color);
+}
+
 bool isAbsolutePath(char* path) {
     if (path[0] == '/') {
         return true;
