@@ -1,14 +1,14 @@
 #include "../header/user/user-shell.h"
-#include "cd.c"
+#include "cd.h"
 
-void cat (char* argv, int argc) {
+void cat (char argv[4][100], int argc) {
     int temp_Path = currentDirectory;
     if (argc < 2) {
         print("cat: missing operand\n", 0b0110);
     } else if(argc > 2){
         print("cat: too much operand\n", 0b0110);
     } else{
-        int resultCD = cd(argv, argc, false);
+        int resultCD = cd((char (*)[100]) argv, argc, false);
         if (resultCD == 0){ //kalo berhasil cd nya
             bool file_Found = false;
             char pathList[10][16];
