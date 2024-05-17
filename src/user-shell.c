@@ -81,7 +81,7 @@ void lineParser(char* line, char argv[4][100], int* argc){
 }
 
 // cari cluster number dari directory entry
-int findDirEntryClusterNumber(char* entryName) {
+int findDirEntryIndex(char* entryName) {
     for (int i = 0; i < 64; i++) {
         if (memcmp(dirTable.table[i].name, entryName, 8) == 0 && 
             dirTable.table[i].user_attribute == UATTR_NOT_EMPTY) {
