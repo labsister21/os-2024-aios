@@ -4,7 +4,7 @@
 #include "../header/user/cd.h"
 int cd(char* argv[], int argc, bool isdir){
     if(argc > 2){
-        put("Error: too many arguments\n", 0xF);
+        print("Error: too many arguments\n", 0xF);
         return 1;
     }else{
         uint32_t search_directory_number = ROOT_CLUSTER_NUMBER;
