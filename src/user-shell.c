@@ -122,6 +122,30 @@ void parsePath(char* path, char output[16][10], int* wordCount) {
     }
 }
 
+void parseExt(char* path, char output[16][10], int* wordCount) {
+    for (int k = 0; k < 16; k++) {
+        for (int l = 0; l < 10; l++) {
+            output[k][l] = 0;
+        }
+    }
+    int i = 0;
+    int len = strlen(path);
+    *wordCount = 1;
+    if (path[0] == '.') {
+        i++;
+    }
+    int wordIndex = 0;
+    for (; i < len; i++) {
+        if (path[i] == '.') {
+            (*wordCount)++;
+            wordIndex = 0;
+        } else {
+            output[(*wordCount)-1][wordIndex] = path[i];
+            wordIndex++;
+        }
+    }
+}
+
 int currentDirectory = ROOT_CLUSTER_NUMBER;
 struct FAT32DirectoryTable dirTable;
 
