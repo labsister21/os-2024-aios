@@ -31,7 +31,7 @@ void init_directory_table(struct FAT32DirectoryTable *dir_table, char *name, uin
     // Entry-1 contains parent dir
     memcpy(table[1].name, "..", 3);
     table[1].user_attribute = UATTR_NOT_EMPTY;
-    table[0].attribute = ATTR_SUBDIRECTORY;
+    table[1].attribute = ATTR_SUBDIRECTORY;
     table[1].cluster_low = parent_dir_cluster;
     table[1].cluster_high = parent_dir_cluster >> 16;
 

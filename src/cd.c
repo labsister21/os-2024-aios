@@ -2,12 +2,12 @@
 #include "header/stdlib/string.h"
 #include "header/user/user-shell.h"
 #include "header/user/cd.h"
-int cd(char* argv[], int argc, bool isdir){
+int cd(char argv[4][100], int argc, bool isdir){
     if(argc > 2){
         print("Error: too many arguments\n", 0xF);
         return 1;
     }else{
-        uint32_t search_directory_number = ROOT_CLUSTER_NUMBER;
+        uint32_t startDir = currentDirectory;
         char* pathTemp = argv[1];
         char path[16][10];
         int wordCount;
@@ -20,32 +20,31 @@ int cd(char* argv[], int argc, bool isdir){
         }
         int index = 0;
         // kalo ga absolute ke current
-        if(!isAbsolutePath(argv[1])){
-            search_directory_number = currentDirectory;
+        if(isAbsolutePath(argv[1])){
+            currentDirectory = ROOT_CLUSTER_NUMBER;
         }
-        int cluster_number;
-        updateDirectoryTable(search_directory_number);
+        updateDirectoryTable(currentDirectory);
         while(index < lenPath){
             int entry = findDirEntryIndex(path[index]);
             // tidak ketemu
             if(entry == -1){
-                print("Error: no such directory", 0xF);
+                print("Error: no such directory: ", 0xF);
                 print(pathTemp, 0xF);
                 print("\n", 0xF);
+                currentDirectory = startDir;
                 return 2;
             }
             // entry di directory table bukan directory
             if(dirTable.table[entry].attribute != ATTR_SUBDIRECTORY){
                 print("Error: not a directory\n", 0xF);
+                currentDirectory = startDir;
                 return 3;
             }
-            cluster_number = (int)(dirTable.table[index].cluster_high << 16) + dirTable.table[index].cluster_low;
+            currentDirectory = (int)(dirTable.table[entry].cluster_high << 16 | dirTable.table[entry].cluster_low);
             // get directory table
-            updateDirectoryTable(cluster_number);
+            updateDirectoryTable(currentDirectory);
             index++;
         }
-        search_directory_number = cluster_number;
-
     }
     return 0;
 }

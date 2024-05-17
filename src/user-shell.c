@@ -50,12 +50,12 @@ void printDir() {
     int i = 0;
     while (dir != ROOT_CLUSTER_NUMBER) {
         updateDirectoryTable(dir);
-        memcpy(tempDir[i], dirTable.table->name, 8);
-        dir = (uint32_t) ((dirTable.table->cluster_high << 16) | dirTable.table->cluster_low);
+        memcpy(tempDir[i], dirTable.table[0].name, 8);
+        dir = (uint32_t) ((dirTable.table[1].cluster_high << 16) | dirTable.table[1].cluster_low);
         i++;
     }
 
-    for (int j = i; j >= 0; j--) {
+    for (int j = i-1; j >= 0; j--) {
         print(tempDir[j], 0xB);
         if (j >= 1) {
             print("/", 0xB);
@@ -191,11 +191,11 @@ int main(void) {
 
         // Call functions
         if (memcmp(argv[0], "cd", strlen(argv[0])) == 0) {
-            cd((char**) argv, argc, true);
+            cd(argv, argc, true);
         } else if (memcmp(argv[0], "ls", strlen(argv[0])) == 0) {
-            ls((char**) argv, argc);
+            ls(argv, argc);
         } else if (memcmp(argv[0], "mkdir", strlen(argv[0])) == 0) {
-            mkdir((char**) argv, argc);
+            mkdir(argv, argc);
         } else if (memcmp(argv[0], "cat", strlen(argv[0])) == 0) {
             // cat(argv, argc);
             print(argv[0], 0xF);
