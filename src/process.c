@@ -39,31 +39,28 @@ int32_t process_create_user_process(struct FAT32DriverRequest request) {
     // Process PCB
     struct PageDirectory* pagedir = paging_create_new_page_directory();
 
-    bool pagingStatus = paging_allocate_check(request.buffer_size);
-    if(!pagingStatus) {
-        retcode = PROCESS_CREATE_FAIL_NOT_ENOUGH_MEMORY;
-        goto exit_cleanup;
-    }
-
-    
-
-    pagingStatus = paging_allocate_user_page_frame(pagedir, request.buf);
-
-
     int8_t readfsStatus = read(request);
     if(readfsStatus != 1) {
         retcode = PROCESS_CREATE_FAIL_FS_READ_FAILURE;
         goto exit_cleanup;
     }
 
+    bool pagingStatus = paging_allocate_user_page_frame(pagedir, request.buf);
+    if(!pagingStatus) {
+        retcode = PROCESS_CREATE_FAIL_PAGING_ALLOC_FAILURE;
+        goto exit_cleanup;
+    }
+
     int32_t p_index = process_list_get_inactive_index();
     struct ProcessControlBlock *new_pcb = &(_process_list[p_index]);
 
-    new_pcb->metadata.pid = process_generate_new_pid();
-
-    
-    new_pcb->metadata.state = READY;
+    new_pcb->context.cpu;
+    new_pcb->context.eipl
     new_pcb->context.eflags |= CPU_EFLAGS_BASE_FLAG | CPU_EFLAGS_FLAG_INTERRUPT_ENABLE;
+    new_pcb->context.page_directory_virtual_addr = *pagedir;
+
+    new_pcb->metadata.pid = process_generate_new_pid();
+    new_pcb->metadata.state = READY;
 
 
 exit_cleanup:

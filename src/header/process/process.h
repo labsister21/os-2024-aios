@@ -44,6 +44,7 @@
 #define PROCESS_CREATE_FAIL_INVALID_ENTRYPOINT   2
 #define PROCESS_CREATE_FAIL_NOT_ENOUGH_MEMORY    3
 #define PROCESS_CREATE_FAIL_FS_READ_FAILURE      4
+#define PROCESS_CREATE_FAIL_PAGING_ALLOC_FAILURE 5
 
 /**
  * Contain information needed for task to be able to get interrupted and resumed later
@@ -76,7 +77,7 @@ typedef enum PROCESS_STATE {
  */
 struct ProcessControlBlock {
     struct {
-        uint32_t                 pid;
+        uint32_t                pid;
         enum PROCESS_STATE      state;
     } metadata;
 
