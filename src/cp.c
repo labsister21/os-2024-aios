@@ -17,7 +17,13 @@ void cp(char argv[4][100], int argc){
         memcpy(argvD[0], argv[0], 100);
         memcpy(argvD[1], argv[2], 100);
         uint32_t startDir = currentDirectory;
-        mkdir(argvD,2);
+
+        int retval = cd(argvS, 2, true);
+        currentDirectory = startDir;
+        updateDirectoryTable(startDir);
+        if(retval == 0){
+            mkdir(argvD,2);
+        }
         cpHelper(argvS,argvD, startDir);
         currentDirectory = startDir;
         
@@ -59,7 +65,17 @@ void cpHelper(char argvS[4][100], char argvD[4][100], uint32_t startDir){
                     memcpy(request.ext, output[1], 3);
                     int32_t retcode;
                     syscall(0,(uint32_t) &request, (uint32_t) &retcode, 0x0);
-                    mkfile(argvD,2,request);
+
+                    uint32_t curWorkingDir = currentDirectory;
+
+                    retval = cd(argvD, 2, true);
+                    currentDirectory = curWorkingDir;
+                    if(retval == 0){
+                        mkfile(argvD,2,request, true);
+                    }else{
+                        mkfile(argvD, 2, request, false);
+                    }
+                    break;
                 }
             }
         }
@@ -115,7 +131,7 @@ void cpHelper(char argvS[4][100], char argvD[4][100], uint32_t startDir){
                     currentDirectory = startDir;
                     updateDirectoryTable(currentDirectory);
 
-                    mkfile(argvD,2,request);
+                    mkfile(argvD,2,request, true);
 
                     currentDirectory =  curWorkingDir;
                     updateDirectoryTable(currentDirectory);
@@ -128,17 +144,21 @@ void cpHelper(char argvS[4][100], char argvD[4][100], uint32_t startDir){
 
 
 
-void mkfile(char argv[4][100], int argc, struct FAT32DriverRequest request){
+void mkfile(char argv[4][100], int argc, struct FAT32DriverRequest request, bool isDir){
     if (argc > 2) {
         print("Error: too many arguments\n", 0xF);
         return;
     } else {
         int startDir = currentDirectory;
-        int retval = cd((char (*)[100]) argv, argc,true);
+        int retval = cd((char (*)[100]) argv, argc,isDir);
         if (retval != 0) {
             return;
         }
+        char pathList[16][10];
+        int pathCount;
         request.parent_cluster_number = currentDirectory;
+        parsePath(argv[1], pathList, &pathCount);
+        memcpy(request.name, pathList[pathCount-1], 8);
         retval = write(request);
         if (retval == 1) {
             print("Error: File exists\n", 0xF);

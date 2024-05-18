@@ -266,7 +266,6 @@ int main(void) {
             rm(argv, argc);
         } else if (memcmp(argv[0], "mv", strlen(argv[0])) == 0) {
             mv(argv, argc);
-            print(argv[0], 0xF);
         } else if (memcmp(argv[0], "find", strlen(argv[0])) == 0) {
             find(argv, argc);
         } else if (memcmp(argv[0], "clear", strlen(argv[0])) == 0) {
