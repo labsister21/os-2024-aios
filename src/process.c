@@ -1,4 +1,5 @@
 #include "header/process/process.h"
+#include "header/cpu/interrupt.h"
 #include "header/filesystem/fat32.h"
 #include "header/memory/paging.h"
 #include "header/stdlib/string.h"
@@ -54,14 +55,12 @@ int32_t process_create_user_process(struct FAT32DriverRequest request) {
     int32_t p_index = process_list_get_inactive_index();
     struct ProcessControlBlock *new_pcb = &(_process_list[p_index]);
 
-    new_pcb->context.cpu;
-    new_pcb->context.eipl
+    new_pcb->context.eip = 0;
     new_pcb->context.eflags |= CPU_EFLAGS_BASE_FLAG | CPU_EFLAGS_FLAG_INTERRUPT_ENABLE;
     new_pcb->context.page_directory_virtual_addr = *pagedir;
 
     new_pcb->metadata.pid = process_generate_new_pid();
     new_pcb->metadata.state = READY;
-
 
 exit_cleanup:
     return retcode;
