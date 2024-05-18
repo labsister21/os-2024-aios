@@ -118,5 +118,11 @@ void syscall(struct InterruptFrame frame) {
             framebuffer_clear();
             framebuffer_set_cursor(0, 0);
             break;
+        case 10:
+            // Set process to terminates;
+            break;
+        case 11:
+            
+
     }
 }

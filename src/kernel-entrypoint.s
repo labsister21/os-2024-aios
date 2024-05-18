@@ -155,8 +155,8 @@ process_context_switch:
 
     ; Load general-purpose registers
     mov ebx, [ecx + 16]  ; ebx
-    mov edx, [ecx + 20] ; edx
-    mov eax, [ecx + 28] ; eax
+    mov edx, [ecx + 20]  ; edx
+    mov eax, [ecx + 28]  ; eax
     mov ecx, [ecx + 24]  ; ecx
     
     ; Load the new page directory base address (CR3)
