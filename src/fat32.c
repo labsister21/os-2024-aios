@@ -177,7 +177,7 @@ int8_t write(struct FAT32DriverRequest request){
             }
         }
         // Check files with the same name and extension
-        if (memcmp(request.name, table[i].name, 8) == 0 && memcmp(request.ext, table[i].ext, 3) == 0) {
+        if (table[i].user_attribute == UATTR_NOT_EMPTY && memcmp(request.name, table[i].name, 8) == 0 && memcmp(request.ext, table[i].ext, 3) == 0 ) {
             return 1;
         }
     }
