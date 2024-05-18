@@ -44,6 +44,7 @@
 #define PROCESS_CREATE_FAIL_INVALID_ENTRYPOINT   2
 #define PROCESS_CREATE_FAIL_NOT_ENOUGH_MEMORY    3
 #define PROCESS_CREATE_FAIL_FS_READ_FAILURE      4
+#define PROCESS_CREATE_FAIL_PAGING_ALLOC_FAILURE 5
 
 /**
  * Contain information needed for task to be able to get interrupted and resumed later
@@ -54,13 +55,14 @@
  * @param page_directory_virtual_addr CPU register CR3, containing pointer to active page directory
  */
 struct Context {
-    struct CPURegister  cpu;
-    uint32_t            eip;
-    uint32_t            eflags;
-    uint32_t            page_directory_virtual_addr;
+    struct CPURegister      cpu;
+    uint32_t                eip;
+    uint32_t                eflags;
+    struct PageDirectory    page_directory_virtual_addr;
 } __attribute__((packed));
 
 typedef enum PROCESS_STATE {
+    KILLED,
     RUNNING,
     READY,
     BLOCKED
@@ -75,9 +77,8 @@ typedef enum PROCESS_STATE {
  */
 struct ProcessControlBlock {
     struct {
-        int32_t                 pid;
+        uint32_t                pid;
         enum PROCESS_STATE      state;
-        
     } metadata;
 
     struct Context context;
@@ -112,5 +113,13 @@ int32_t process_create_user_process(struct FAT32DriverRequest request);
  * @return    True if process destruction success
  */
 bool process_destroy(uint32_t pid);
+
+uint32_t process_list_get_inactive_index();
+
+int32_t process_generate_new_pid();
+
+uint32_t ceil_div(uint32_t x, uint32_t y) {
+    return 1 + ((x - 1) / y); // if x != 0
+}
 
 #endif
