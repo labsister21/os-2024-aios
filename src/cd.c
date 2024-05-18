@@ -28,15 +28,11 @@ int cd(char argv[4][100], int argc, bool isdir){
             int entry = findDirEntryIndex(path[index]);
             // tidak ketemu
             if(entry == -1){
-                print("Error: no such directory: ", 0xF);
-                print(pathTemp, 0xF);
-                print("\n", 0xF);
                 currentDirectory = startDir;
                 return 2;
             }
             // entry di directory table bukan directory
             if(dirTable.table[entry].attribute != ATTR_SUBDIRECTORY){
-                print("Error: not a directory\n", 0xF);
                 currentDirectory = startDir;
                 return 3;
             }

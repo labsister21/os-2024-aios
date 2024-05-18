@@ -211,6 +211,7 @@ int8_t write(struct FAT32DriverRequest request){
         table[entry_number].attribute = !ATTR_SUBDIRECTORY;
         memcpy(table[entry_number].ext, request.ext, 3);
         table[entry_number].filesize = request.buffer_size;
+        table[entry_number].user_attribute = UATTR_NOT_EMPTY;
 
         // Write file buffer
         for (int k = 0; k < required_clusters; k++) {

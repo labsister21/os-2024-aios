@@ -219,11 +219,43 @@ int main(void) {
 
         // Call functions
         if (memcmp(argv[0], "cd", strlen(argv[0])) == 0) {
-            cd(argv, argc, true);
+            int retval;
+            retval = cd(argv, argc, true);
+            switch (retval)
+            {
+            case 1:
+                print("Error: too many arguments\n", 0xF);
+                break;
+            case 2:
+                print("Error: no such directory: ", 0xF);
+                print(argv[1], 0xF);
+                print("\n", 0xF);
+                break;
+            case 3:
+                print("Error: not a directory\n", 0xF);
+                break;
+            default:
+                break;
+            }
         } else if (memcmp(argv[0], "ls", strlen(argv[0])) == 0) {
             ls(argv, argc);
         } else if (memcmp(argv[0], "mkdir", strlen(argv[0])) == 0) {
-            mkdir(argv, argc);
+            int retval;
+            retval = mkdir(argv, argc);
+            switch (retval)
+            {
+            case 1:
+                print("Error: Directory exists\n", 0xF);
+                break;
+            case 2:
+                print("Error: Parent directory invalid\n", 0xF);
+                break;
+            case -1:
+                print("Error: Unknown error", 0xF);
+                break;
+            default:
+                break;
+            }
         } else if (memcmp(argv[0], "cat", strlen(argv[0])) == 0) {
             cat(argv,argc);
             // print(argv[0], 0xF);
