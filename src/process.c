@@ -3,7 +3,6 @@
 #include "header/cpu/gdt.h"
 #include "header/process/process.h"
 
-int running_process_idx = 0;
 
 struct PageManagerState process_manager_state;
 struct ProcessControlBlock _process_list[PROCESS_COUNT_MAX] = {0};

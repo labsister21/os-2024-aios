@@ -1,4 +1,5 @@
 #include "header/process/scheduler.h"
+#include "header/cpu/portio.h"
 
 #define PIT_MAX_FREQUENCY   1193182
 #define PIT_TIMER_FREQUENCY 1000
@@ -12,6 +13,8 @@
 #define PIT_COMMAND_VALUE (PIT_COMMAND_VALUE_BINARY_MODE | PIT_COMMAND_VALUE_OPR_SQUARE_WAVE | PIT_COMMAND_VALUE_ACC_LOHIBYTE | PIT_COMMAND_VALUE_CHANNEL)
 
 #define PIT_CHANNEL_0_DATA_PIO 0x40
+
+int running_process_idx;
 
 void activate_timer_interrupt(void) {
     __asm__ volatile("cli");
@@ -43,6 +46,7 @@ void activate_timer_interrupt(void) {
  */
 void scheduler_init(void){
     activate_timer_interrupt();
+    running_process_idx = 0;
 }
 
 /**
@@ -59,9 +63,16 @@ void scheduler_save_context_to_current_running_pcb(struct Context ctx){
  * Trigger the scheduler algorithm and context switch to new process
  */
 __attribute__((noreturn)) void scheduler_switch_to_next_process(void){
+    int pilihan = 0;
     // pilih process
-    int pilihan;
+    for (int i = 1; i < PROCESS_COUNT_MAX; i++) {
+        if (_process_list[(i + running_process_idx) % PROCESS_COUNT_MAX].metadata.state == READY) {
+            pilihan = (i + running_process_idx) % PROCESS_COUNT_MAX;
+            break;
+        }
+    }
     struct ProcessControlBlock pickedProcess = _process_list[pilihan];
+    running_process_idx = pilihan;
     
     // pic ack --> 
     pic_ack(IRQ_TIMER + PIC1_OFFSET);

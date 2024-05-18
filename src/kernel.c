@@ -7,6 +7,7 @@
 #include "header/filesystem/fat32.h"
 #include "header/memory/paging.h"
 #include "header/process/process.h"
+#include "header/process/scheduler.h"
 
 
 void kernel_setup(void) {
@@ -51,12 +52,8 @@ void kernel_setup(void) {
 
     // Create & execute process 0
     process_create_user_process(request);
-    paging_use_page_directory(&_process_list[0].context.page_directory_virtual_addr);
-    kernel_execute_user_program((void*) 0x0);
-    
-    while(true){
-        // char c = '\0';
-        // get_keyboard_buffer(&c);
-        // keyboard_do_something(&row, &col, c);
-    }
+    // paging_use_page_directory(&_process_list[0].context.page_directory_virtual_addr);
+    // kernel_execute_user_program((void*) 0x0);
+    scheduler_init();
+    scheduler_switch_to_next_process();
 }

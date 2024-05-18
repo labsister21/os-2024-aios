@@ -4,6 +4,8 @@
 #include "header/driver/keyboard.h"
 #include "header/filesystem/fat32.h"
 #include "header/text/framebuffer.h"
+#include "header/process/scheduler.h"
+#include "header/stdlib/string.h"
 
 void io_wait(void){
     out(0x80, 0);
@@ -40,6 +42,7 @@ void pic_remap(void){
 }
 
 void main_interrupt_handler(struct InterruptFrame frame){
+    struct Context currentContext = {0};
     switch(frame.int_number){
         case PIC1_OFFSET + IRQ_KEYBOARD:
             keyboard_isr();
@@ -49,9 +52,12 @@ void main_interrupt_handler(struct InterruptFrame frame){
             break;
         case PIC1_OFFSET + IRQ_TIMER:
             //copy frame ke context variable
+            memcpy(&currentContext, &frame, sizeof(struct Context));
             //save current context ke running pcb
+            scheduler_save_context_to_current_running_pcb(currentContext);
             //switch to next process (process context switch)
-            
+            scheduler_switch_to_next_process();
+            break;
     }
 }
 
