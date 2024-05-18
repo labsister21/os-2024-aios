@@ -8,6 +8,9 @@ void mkdir(char argv[4][100], int argc){
     if (argc > 2) {
         print("Error: too many arguments\n", 0xF);
         return;
+    } else if (argc < 2) {
+        print("Error: too few arguments\n", 0xF);
+        return;
     } else {
         int startDir = currentDirectory;
         int retval = cd(argv, argc, false);
