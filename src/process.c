@@ -3,6 +3,8 @@
 #include "header/cpu/gdt.h"
 #include "header/process/process.h"
 
+int running_process_idx = 0;
+
 struct PageManagerState process_manager_state;
 struct ProcessControlBlock _process_list[PROCESS_COUNT_MAX] = {0};
 
@@ -77,7 +79,7 @@ bool process_destroy(uint32_t pid) {
 
 uint32_t process_list_get_inactive_index() {
     for(uint8_t i = 0; i < PROCESS_COUNT_MAX; i++) {
-        if(_process_list[i].metadata.state == KILLED) {
+        if(_process_list[i].metadata.state == READY) {
             return i;
         }
     }
