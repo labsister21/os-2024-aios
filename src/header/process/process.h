@@ -120,4 +120,6 @@ int32_t process_generate_new_pid();
 
 uint32_t ceil_div(uint32_t x, uint32_t y);
 
+extern struct PageManagerState process_manager_state;
+extern struct ProcessControlBlock _process_list[PROCESS_COUNT_MAX];
 #endif

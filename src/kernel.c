@@ -8,7 +8,6 @@
 #include "header/memory/paging.h"
 #include "header/process/process.h"
 
-extern struct ProcessControlBlock _process_list[PROCESS_COUNT_MAX];
 
 void kernel_setup(void) {
     load_gdt(&_gdt_gdtr);
@@ -54,7 +53,7 @@ void kernel_setup(void) {
     process_create_user_process(request);
     paging_use_page_directory(&_process_list[0].context.page_directory_virtual_addr);
     kernel_execute_user_program((void*) 0x0);
-      
+    
     while(true){
         // char c = '\0';
         // get_keyboard_buffer(&c);

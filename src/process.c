@@ -3,8 +3,8 @@
 #include "header/cpu/gdt.h"
 #include "header/process/process.h"
 
-extern struct PageManagerState process_manager_state;
-static struct ProcessControlBlock _process_list[PROCESS_COUNT_MAX] = {0};
+struct PageManagerState process_manager_state;
+struct ProcessControlBlock _process_list[PROCESS_COUNT_MAX] = {0};
 
 struct ProcessControlBlock* process_get_current_running_pcb_pointer(void) {
     for(uint8_t i = 0; i < PROCESS_COUNT_MAX; i++) {
