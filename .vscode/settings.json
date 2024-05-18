@@ -4,6 +4,7 @@
         "gdt.h": "c",
         "user-shell.h": "c",
         "cd.h": "c",
-        "fat32.h": "c"
+        "fat32.h": "c",
+        "cat.h": "c"
     },
 }
