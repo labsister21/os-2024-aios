@@ -1,5 +1,6 @@
 #ifndef _USER_CP
 #define _USER_CP
+#include "header/filesystem/fat32.h"
 
 void cp(char argv[4][100], int argc);
 void append(char argv[4][100], char source[10]);

@@ -64,15 +64,16 @@ user-shell:
 	@$(CC)  $(CFLAGS) -fno-pie $(SOURCE_FOLDER)/ls.c -o ls.o
 	@$(CC)  $(CFLAGS) -fno-pie $(SOURCE_FOLDER)/mkdir.c -o mkdir.o
 	@$(CC)  $(CFLAGS) -fno-pie $(SOURCE_FOLDER)/rm.c -o rm.o
+	@$(CC)  $(CFLAGS) -fno-pie $(SOURCE_FOLDER)/mv.c -o mv.o
 	@$(CC)  $(CFLAGS) -fno-pie $(SOURCE_FOLDER)/fat32.c -o fat32.o
 	@$(CC)  $(CFLAGS) -fno-pie $(SOURCE_FOLDER)/disk.c -o disk.o
 	@$(CC)  $(CFLAGS) -fno-pie $(SOURCE_FOLDER)/portio.c -o portio.o
 	@$(CC)  $(CFLAGS) -fno-pie $(SOURCE_FOLDER)/stdlib/string.c -o string.o
 	@$(LIN) -T $(SOURCE_FOLDER)/user-linker.ld -melf_i386 --oformat=binary \
-		crt0.o user-shell.o string.o cd.o mkdir.o fat32.o disk.o portio.o ls.o cat.o rm.o find.o cp.o -o $(OUTPUT_FOLDER)/shell
+		crt0.o user-shell.o string.o cd.o mkdir.o fat32.o disk.o portio.o ls.o cat.o rm.o find.o cp.o mv.o -o $(OUTPUT_FOLDER)/shell
 	@echo Linking object shell object files and generate flat binary...
 	@$(LIN) -T $(SOURCE_FOLDER)/user-linker.ld -melf_i386 --oformat=elf32-i386 \
-		crt0.o user-shell.o string.o cd.o mkdir.o fat32.o disk.o portio.o ls.o cat.o rm.o find.o cp.o -o $(OUTPUT_FOLDER)/shell_elf
+		crt0.o user-shell.o string.o cd.o mkdir.o fat32.o disk.o portio.o ls.o cat.o rm.o find.o cp.o mv.o -o $(OUTPUT_FOLDER)/shell_elf
 	@echo Linking object shell object files and generate ELF32 for debugging...
 	@size --target=binary $(OUTPUT_FOLDER)/shell
 	@rm -f *.o

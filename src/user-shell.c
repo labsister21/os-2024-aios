@@ -9,6 +9,7 @@
 #include "header/user/cp.h"
 #include "header/user/rm.h"
 #include "header/user/find.h"
+#include "header/user/mv.h"
 
 void syscall(uint32_t eax, uint32_t ebx, uint32_t ecx, uint32_t edx) {
     __asm__ volatile("mov %0, %%ebx" : /* <Empty> */ : "r"(ebx));
@@ -261,11 +262,10 @@ int main(void) {
             // print(argv[0], 0xF);
         } else if (memcmp(argv[0], "cp", strlen(argv[0])) == 0) {
             cp(argv, argc);
-            print(argv[0], 0xF);
         } else if (memcmp(argv[0], "rm", strlen(argv[0])) == 0) {
             rm(argv, argc);
         } else if (memcmp(argv[0], "mv", strlen(argv[0])) == 0) {
-            // mv(argv, argc);
+            mv(argv, argc);
             print(argv[0], 0xF);
         } else if (memcmp(argv[0], "find", strlen(argv[0])) == 0) {
             find(argv, argc);
