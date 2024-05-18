@@ -1,12 +1,10 @@
-#include "header/process/process.h"
-#include "header/cpu/interrupt.h"
-#include "header/filesystem/fat32.h"
 #include "header/memory/paging.h"
 #include "header/stdlib/string.h"
 #include "header/cpu/gdt.h"
+#include "header/process/process.h"
 
-extern struct PageManagerState process_manager_state;
-static struct ProcessControlBlock _process_list[PROCESS_COUNT_MAX] = {0};
+struct PageManagerState process_manager_state;
+struct ProcessControlBlock _process_list[PROCESS_COUNT_MAX] = {0};
 
 struct ProcessControlBlock* process_get_current_running_pcb_pointer(void) {
     for(uint8_t i = 0; i < PROCESS_COUNT_MAX; i++) {
@@ -88,4 +86,8 @@ uint32_t process_list_get_inactive_index() {
 
 int32_t process_generate_new_pid() {
     return process_manager_state.active_process_count + 1;
+}
+
+uint32_t ceil_div(uint32_t x, uint32_t y) {
+    return 1 + ((x - 1) / y); // if x != 0
 }
