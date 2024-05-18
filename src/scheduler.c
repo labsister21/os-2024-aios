@@ -58,7 +58,7 @@ void scheduler_save_context_to_current_running_pcb(struct Context ctx){
 /**
  * Trigger the scheduler algorithm and context switch to new process
  */
-void scheduler_switch_to_next_process(void){
+__attribute__((noreturn)) void scheduler_switch_to_next_process(void){
     // pilih process
     int pilihan;
     struct ProcessControlBlock pickedProcess = _process_list[pilihan];
@@ -67,6 +67,8 @@ void scheduler_switch_to_next_process(void){
     pic_ack(IRQ_TIMER + PIC1_OFFSET);
 
     // use page directory dari pcb --> ganti register cr3
+    paging_use_page_directory(&(pickedProcess.context.page_directory_virtual_addr));
+
     // context switch
     process_context_switch(pickedProcess.context);
 }
