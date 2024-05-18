@@ -13,6 +13,8 @@ void framebuffer_set_cursor(uint8_t r, uint8_t c){
 	out(0x3D5, (uint8_t) (pos & 0xFF));
 	out(0x3D4, 0x0E);
 	out(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+    framebuffer_current_state.row = r;
+    framebuffer_current_state.col = c;
 }
 
 void framebuffer_write(uint8_t row, uint8_t col, char c, uint8_t fg, uint8_t bg){
@@ -22,7 +24,7 @@ void framebuffer_write(uint8_t row, uint8_t col, char c, uint8_t fg, uint8_t bg)
 }
 
 void framebuffer_clear(void){
-    memset(FRAMEBUFFER_MEMORY_OFFSET, 0x7000, sizeof(uint8_t)*2000);
+    memset(FRAMEBUFFER_MEMORY_OFFSET, 0, sizeof(uint8_t)*120*80);
 }
 
 char framebuffer_read(uint8_t row, uint8_t col){

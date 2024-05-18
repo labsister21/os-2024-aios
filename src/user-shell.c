@@ -237,13 +237,17 @@ int main(void) {
             print(argv[0], 0xF);
         } else if (memcmp(argv[0], "find", strlen(argv[0])) == 0) {
             find(argv, argc);
+        } else if (memcmp(argv[0], "clear", strlen(argv[0])) == 0) {
+			syscall(9, 0, 0, 0);
         } else if (argc == 0) {
             // Do nothing
         } else {
             print("command not found: ", 0xF);
             print(argv[0], 0xF);
+        } if (memcmp(argv[0], "clear", strlen(argv[0])) != 0){
+            print("\n", 0xF);
         }
-        print("\n", 0xF);
+
     }
 
     return 0;
