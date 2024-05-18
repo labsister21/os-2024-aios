@@ -47,6 +47,11 @@ void main_interrupt_handler(struct InterruptFrame frame){
         case 0x30:
             syscall(frame);
             break;
+        case PIC1_OFFSET + IRQ_TIMER:
+            //copy frame ke context variable
+            //save current context ke running pcb
+            //switch to next process (process context switch)
+            
     }
 }
 
