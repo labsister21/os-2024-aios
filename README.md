@@ -1,4 +1,4 @@
-# aiOS Project
+# aiOS
 
 > Tugas Besar Sistem Operasi Kelompok **[aiOS]**
 > 
