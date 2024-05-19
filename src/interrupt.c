@@ -132,7 +132,7 @@ void syscall(struct InterruptFrame frame) {
             // get Process information
             for (int i = 0; i < 16; i++) {
                 if (_process_list[i].metadata.state != KILLED) {
-                    (*(int**)frame.cpu.general.ebx)[i] = _process_list[i].metadata.pid;
+                    ((int*) frame.cpu.general.ebx)[i] = _process_list[i].metadata.pid;
                 }
             }
             break;

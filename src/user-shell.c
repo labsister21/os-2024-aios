@@ -249,7 +249,7 @@ int main(void) {
             switch (retval)
             {
             case 1:
-                print("Error: Directory exists\n", 0xF);
+                print("Error: Name is taken\n", 0xF);
                 break;
             case 2:
                 print("Error: Parent directory invalid\n", 0xF);

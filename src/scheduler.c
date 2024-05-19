@@ -46,6 +46,7 @@ void activate_timer_interrupt(void) {
  */
 void scheduler_init(void){
     activate_timer_interrupt();
+    process_manager_state.active_process_count = 0;
     running_process_idx = 0;
 }
 

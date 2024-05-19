@@ -60,7 +60,7 @@ int32_t process_create_user_process(struct FAT32DriverRequest request) {
 
     new_pcb->metadata.pid = process_generate_new_pid();
     new_pcb->metadata.state = READY;
-
+    process_manager_state.active_process_count++;
 exit_cleanup:
     return retcode;
 }
@@ -70,6 +70,7 @@ bool process_destroy(uint32_t pid) {
         if(_process_list[i].metadata.pid == pid) {
             memset(&_process_list[i], 0, sizeof(struct ProcessControlBlock));
             _process_list[i].metadata.state = KILLED;
+            process_manager_state.active_process_count--;
             return true;
         }
     }

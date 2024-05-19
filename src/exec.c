@@ -31,13 +31,13 @@ void exec(char argv[4][100], int argc){
                 return;
             } else{
                 if (dirTable.table[entry].attribute != ATTR_SUBDIRECTORY){
-                    struct ClusterBuffer clusterBuff[12] = {0};
+                    struct ClusterBuffer clusterBuff[64] = {0};
                     struct FAT32DriverRequest request = {
                         .buf = &clusterBuff,
                         .name = "\0\0\0\0\0\0\0",
                         .ext = "\0\0\0",
                         .parent_cluster_number = currentDirectory,
-                        .buffer_size = 12 * CLUSTER_SIZE,
+                        .buffer_size = 64 * CLUSTER_SIZE,
                     };
                     memcpy(request.name, output[0], 8);
                     memcpy(request.ext, output[1], 3);

@@ -10,7 +10,7 @@ void ps(int argc){
     for (int i = 0; i < 16; i++) {
         process_list[i] = -1;
     }
-    syscall(12, (uint32_t) &process_list, 0, 0);
+    syscall(12, (uint32_t) process_list, 0, 0);
     print("Active Processes: \n", 0xF);
     char str[10];
     for (int i = 0; i < 16; i++) {
