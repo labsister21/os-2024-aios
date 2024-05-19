@@ -6,6 +6,7 @@
 #include "header/text/framebuffer.h"
 #include "header/process/scheduler.h"
 #include "header/stdlib/string.h"
+#include "header/process/process.h"
 
 void io_wait(void){
     out(0x80, 0);
@@ -119,10 +120,21 @@ void syscall(struct InterruptFrame frame) {
             framebuffer_set_cursor(0, 0);
             break;
         case 10:
-            // Set process to terminates;
+            // Set process to terminates based on PID;
+            *(bool*)frame.cpu.general.ecx = process_destroy(frame.cpu.general.ebx);
+
             break;
         case 11:
-            
-
+            // create user process
+            *(uint32_t*)frame.cpu.general.ecx = process_create_user_process(*(struct FAT32DriverRequest*)frame.cpu.general.ebx);
+            break;
+        case 12:
+            // get Process information
+            for (int i = 0; i < 16; i++) {
+                if (_process_list[i].metadata.state != KILLED) {
+                    (*(int**)frame.cpu.general.ebx)[i] = _process_list[i].metadata.pid;
+                }
+            }
+            break;
     }
 }

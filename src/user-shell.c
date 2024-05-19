@@ -10,6 +10,9 @@
 #include "header/user/rm.h"
 #include "header/user/find.h"
 #include "header/user/mv.h"
+#include "header/user/exec.h"
+#include "header/user/kill.h"
+#include "header/user/ps.h"
 
 void syscall(uint32_t eax, uint32_t ebx, uint32_t ecx, uint32_t edx) {
     __asm__ volatile("mov %0, %%ebx" : /* <Empty> */ : "r"(ebx));
@@ -219,7 +222,7 @@ int main(void) {
         lineParser(line, argv, &argc);
 
         // Call functions
-        if (memcmp(argv[0], "cd", strlen(argv[0])) == 0) {
+        if (memcmp(argv[0], "cd", 3) == 0) {
             int retval;
             retval = cd(argv, argc, true);
             switch (retval)
@@ -238,9 +241,9 @@ int main(void) {
             default:
                 break;
             }
-        } else if (memcmp(argv[0], "ls", strlen(argv[0])) == 0) {
+        } else if (memcmp(argv[0], "ls", 3) == 0) {
             ls(argv, argc);
-        } else if (memcmp(argv[0], "mkdir", strlen(argv[0])) == 0) {
+        } else if (memcmp(argv[0], "mkdir", 6) == 0) {
             int retval;
             retval = mkdir(argv, argc);
             switch (retval)
@@ -257,25 +260,31 @@ int main(void) {
             default:
                 break;
             }
-        } else if (memcmp(argv[0], "cat", strlen(argv[0])) == 0) {
+        } else if (memcmp(argv[0], "cat", 4) == 0) {
             cat(argv,argc);
             // print(argv[0], 0xF);
-        } else if (memcmp(argv[0], "cp", strlen(argv[0])) == 0) {
+        } else if (memcmp(argv[0], "cp", 3) == 0) {
             cp(argv, argc);
-        } else if (memcmp(argv[0], "rm", strlen(argv[0])) == 0) {
+        } else if (memcmp(argv[0], "rm", 3) == 0) {
             rm(argv, argc);
-        } else if (memcmp(argv[0], "mv", strlen(argv[0])) == 0) {
+        } else if (memcmp(argv[0], "mv", 3) == 0) {
             mv(argv, argc);
-        } else if (memcmp(argv[0], "find", strlen(argv[0])) == 0) {
+        } else if (memcmp(argv[0], "find", 5) == 0) {
             find(argv, argc);
-        } else if (memcmp(argv[0], "clear", strlen(argv[0])) == 0) {
+        } else if (memcmp(argv[0], "clear", 6) == 0) {
 			syscall(9, 0, 0, 0);
+        } else if (memcmp(argv[0], "exec", 5) == 0) {
+			exec(argv, argc);
+        } else if (memcmp(argv[0], "ps", 3) == 0) {
+			ps(argc);
+        } else if (memcmp(argv[0], "kill", 5) == 0) {
+			kill(argv, argc);
         } else if (argc == 0) {
             // Do nothing
         } else {
             print("command not found: ", 0xF);
             print(argv[0], 0xF);
-        } if (memcmp(argv[0], "clear", strlen(argv[0])) != 0){
+        } if (memcmp(argv[0], "clear", 6) != 0){
             print("\n", 0xF);
         }
 

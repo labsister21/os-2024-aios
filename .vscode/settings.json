@@ -6,6 +6,9 @@
         "cd.h": "c",
         "fat32.h": "c",
         "cat.h": "c",
-        "process.h": "c"
+        "process.h": "c",
+        "kill.h": "c",
+        "exec.h": "c",
+        "interrupt.h": "c"
     },
 }

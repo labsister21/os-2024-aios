@@ -40,7 +40,7 @@ int32_t process_create_user_process(struct FAT32DriverRequest request) {
     struct PageDirectory* pagedir = paging_create_new_page_directory();
 
     int8_t readfsStatus = read(request);
-    if(readfsStatus != 1) {
+    if(readfsStatus != 0) {
         retcode = PROCESS_CREATE_FAIL_FS_READ_FAILURE;
         goto exit_cleanup;
     }
@@ -78,7 +78,7 @@ bool process_destroy(uint32_t pid) {
 
 uint32_t process_list_get_inactive_index() {
     for(uint8_t i = 0; i < PROCESS_COUNT_MAX; i++) {
-        if(_process_list[i].metadata.state == READY) {
+        if(_process_list[i].metadata.state == KILLED) {
             return i;
         }
     }
