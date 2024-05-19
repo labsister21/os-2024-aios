@@ -11,7 +11,7 @@ void kill(char argv[4][100], int argc){
         return;
     } else {
         int  i, len;
-        int pid = 0;
+        int pid = 1;
         len = strlen(argv[1]);
         int currentNumber = 0;
         // parse number
