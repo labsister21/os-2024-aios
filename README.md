@@ -25,7 +25,7 @@ aiOS Project
 
 
 ## Project Status
-Project is: _in progress_.
+Project is: **completed**.
 
 
 ## Acknowledgements
