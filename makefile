@@ -45,9 +45,18 @@ kernel:
 	@$(CC) $(CFLAGS) $(SOURCE_FOLDER)/fat32.c -o $(OUTPUT_FOLDER)/fat32.o
 	@$(CC) $(CFLAGS) $(SOURCE_FOLDER)/process.c -o $(OUTPUT_FOLDER)/process.o
 	@$(CC) $(CFLAGS) $(SOURCE_FOLDER)/scheduler.c -o $(OUTPUT_FOLDER)/scheduler.o
+	@$(CC) $(CFLAGS) $(SOURCE_FOLDER)/cmos.c -o $(OUTPUT_FOLDER)/cmos.o
 	@$(LIN) $(LFLAGS) bin/*.o -o $(OUTPUT_FOLDER)/kernel
 	@echo Linking object files and generate elf32...
 	@rm -f $(OUTPUT_FOLDER)/*.o
+
+clock:
+	@$(CC) $(CFLAGS) $(SOURCE_FOLDER)/clock.c -o clock.o
+	@$(CC) $(CFLAGS) $(SOURCE_FOLDER)/stdlib/string.c -o string.o
+	@$(LIN) -T $(SOURCE_FOLDER)/user-linker.ld -melf_i386 --oformat=elf32-i386 \
+		clock.o string.o -o $(OUTPUT_FOLDER)/clock
+	@echo Linking object files and generate clock
+	@rm -f *.o
 
 inserter:
 	@$(CC) -Wno-builtin-declaration-mismatch -g -I$(SOURCE_FOLDER) \
@@ -74,6 +83,7 @@ user-shell:
 	@$(CC)  $(CFLAGS) -fno-pie $(SOURCE_FOLDER)/kill.c -o kill.o
 	@$(CC)  $(CFLAGS) -fno-pie $(SOURCE_FOLDER)/exec.c -o exec.o
 	@$(CC)  $(CFLAGS) -fno-pie $(SOURCE_FOLDER)/ps.c -o ps.o
+
 	@$(LIN) -T $(SOURCE_FOLDER)/user-linker.ld -melf_i386 --oformat=binary \
 		crt0.o user-shell.o string.o cd.o mkdir.o fat32.o disk.o portio.o ls.o cat.o rm.o find.o cp.o mv.o kill.o ps.o exec.o -o $(OUTPUT_FOLDER)/shell
 	@echo Linking object shell object files and generate flat binary...
@@ -83,10 +93,11 @@ user-shell:
 	@size --target=binary $(OUTPUT_FOLDER)/shell
 	@rm -f *.o
 
-insert-shell: inserter user-shell
+insert-shell: inserter user-shell clock
 	@echo Inserting shell into root directory...
 	@cd $(OUTPUT_FOLDER); ./inserter shell 2 $(DISK_NAME).bin
 	@cd $(OUTPUT_FOLDER); ./inserter tes 2 $(DISK_NAME).bin
+	@cd $(OUTPUT_FOLDER); ./inserter clock 2 $(DISK_NAME).bin
 
 iso: kernel
 	@mkdir -p $(OUTPUT_FOLDER)/iso/boot/grub

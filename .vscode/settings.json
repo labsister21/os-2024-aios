@@ -9,6 +9,7 @@
         "process.h": "c",
         "kill.h": "c",
         "exec.h": "c",
-        "interrupt.h": "c"
+        "interrupt.h": "c",
+        "framebuffer.h": "c"
     },
 }

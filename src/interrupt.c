@@ -7,6 +7,7 @@
 #include "header/process/scheduler.h"
 #include "header/stdlib/string.h"
 #include "header/process/process.h"
+#include "header/driver/cmos.h"
 
 void io_wait(void){
     out(0x80, 0);
@@ -136,5 +137,10 @@ void syscall(struct InterruptFrame frame) {
                 }
             }
             break;
+        case 13:
+            read_rtc();
+            *(unsigned char*)frame.cpu.general.ebx = hour;
+            *(unsigned char*)frame.cpu.general.ecx = minute;
+            *(unsigned char*)frame.cpu.general.edx = second;
     }
 }
