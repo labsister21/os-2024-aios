@@ -40,21 +40,18 @@ void cat(char argv[4][100], int argc) {
                     memcpy(request.name, output[0], 8);
                     memcpy(request.ext, output[1], 3);
 
-                    int32_t retcode;
-                    syscall(0,(uint32_t) &request, (uint32_t) &retcode, 0x0);
+                    int retcode;
+                    retcode = read(request);
                     if (retcode != 0) {
-                        print(output[0],0XF);
-                        print(output[1],0XF);
-                        print("cat: ini?", 0b0110);
                         switch (retcode) {
                             case 1:
-                                print("Is a directory\n", 0b0110);
+                                print("Not a File\n", 0b0110);
                                 break;
                             case 2:
-                                print("Buffer size is not enough\n", 0b0110);
+                                print("No file\n", 0b0110);
                                 break;
-                            case 3:
-                                print("No such file or directory\n", 0b0110);
+                            case -1:
+                                print("Error\n", 0b0110);
                                 break;
                         }
                     } else {
