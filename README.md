@@ -16,6 +16,8 @@
 ## Table of Contents
 * [General Info](#general-information)
 * [Project Status](#project-status)
+* [Hahaha Moment](#hahaha-moment)
+* [Hehehe Moment](#hehehe-moment)
 * [Acknowledgements](#acknowledgements)
 * [Links](#links)
 
@@ -27,6 +29,13 @@ Tugas besar ini akan menjadi introductory to kernel development dan melihatkan s
 - Chapter 2: Paging, User Mode, Shell
 - Chapter 3: Process, Scheduler, Multitasking
 
+
+## Hahaha Moment
+Hahaha D,:
+
+
+## Hehehe Moment
+Hehehe D_:
 
 
 ## Project Status
