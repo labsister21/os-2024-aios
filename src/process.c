@@ -59,10 +59,9 @@ int32_t process_create_user_process(struct FAT32DriverRequest request) {
     int32_t p_index = process_list_get_inactive_index();
     struct ProcessControlBlock *new_pcb = &(_process_list[p_index]);
     process_manager_state.used_process[p_index] = true;
-    process_manager_state.active_process_count++;
 
-    new_pcb->memory.virtual_addr_used[0] = pagingProcess + KERNEL_VIRTUAL_ADDRESS_BASE;;
-    new_pcb->memory.virtual_addr_used[1] = paging + KERNEL_VIRTUAL_ADDRESS_BASE;;
+    new_pcb->memory.virtual_addr_used[0] = pagingProcess + KERNEL_VIRTUAL_ADDRESS_BASE;
+    new_pcb->memory.virtual_addr_used[1] = paging + KERNEL_VIRTUAL_ADDRESS_BASE;
     new_pcb->memory.page_frame_used_count = 2;
     new_pcb->context.eip = (uint32_t)request.buf;
     new_pcb->context.cpu.stack.ebp = 0xBFFFFFFC;
@@ -75,10 +74,10 @@ int32_t process_create_user_process(struct FAT32DriverRequest request) {
     new_pcb->context.ss = 0x20 | 0x3;
     new_pcb->context.cs = 0x18 | 0x3;
     new_pcb->context.page_directory_virtual_addr = pagedir;
-    new_pcb->metadata.pid = process_generate_new_pid();
+    new_pcb->metadata.pid = p_index;
     new_pcb->metadata.state = READY;
-    process_manager_state.active_process_count++;
     paging_use_page_directory(current_pagedir);
+    process_manager_state.active_process_count++;
 exit_cleanup:
     return retcode;
 }
@@ -88,6 +87,7 @@ bool process_destroy(uint32_t pid) {
         if(_process_list[i].metadata.pid == pid) {
             memset(&_process_list[i], 0, sizeof(struct ProcessControlBlock));
             _process_list[i].metadata.state = KILLED;
+            process_manager_state.used_process[pid] = false;
             process_manager_state.active_process_count--;
             return true;
         }
@@ -96,8 +96,8 @@ bool process_destroy(uint32_t pid) {
 }
 
 uint32_t process_list_get_inactive_index() {
-    for(uint8_t i = 0; i < PROCESS_COUNT_MAX; i++) {
-        if(_process_list[i].metadata.state == KILLED) {
+    for (int i = 0; i < PROCESS_COUNT_MAX; i++) {
+        if (!process_manager_state.used_process[i]) {
             return i;
         }
     }
@@ -105,7 +105,12 @@ uint32_t process_list_get_inactive_index() {
 }
 
 int32_t process_generate_new_pid() {
-    return process_manager_state.active_process_count + 1;
+    for (int i = 0; i < PROCESS_COUNT_MAX; i++) {
+        if (!process_manager_state.used_process[i]) {
+            return i;
+        }
+    };
+    return -1;
 }
 
 uint32_t ceil_div(uint32_t x, uint32_t y) {

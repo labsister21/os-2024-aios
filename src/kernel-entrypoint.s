@@ -124,11 +124,14 @@ process_context_switch:
     lea ecx, [esp + 4] ;
 
     ; 2. Lanjutkan dengan setup iret stack dengan push
-    ; push ds
-    ; push es
-    ; push fs
-    ; push gs
+    ; push ss, esp, eflags, cs, and eip
+    push dword [ecx + 56] ; ss
+    push dword [ecx + 12] ; push esp
+    push dword [ecx + 48] ; eflags
+    push dword [ecx + 60] ; cs
+    push dword [ecx + 52] ; eip
 
+    ; 3. Load semua register dari context
     ; Load segment registers
     mov eax, [ecx + 32] ; gs
     mov gs, eax
@@ -138,45 +141,20 @@ process_context_switch:
     mov es, eax
     mov eax, [ecx + 44] ; ds
     mov ds, eax
-
-    ; Save eflags and eip
-    push dword [ecx + 48] ; eflags
-    push dword [ecx + 52] ; eip
-    
-    ; 3. Load semua register dari ctx
-
     ; Load index registers
     mov edi, [ecx + 0]  ; edi
     mov esi, [ecx + 4]  ; esi
-
     ; Load stack registers
     mov ebp, [ecx + 8]  ; ebp
-
-    ; Load extra registers
-    ; mov eax, [ecx + 56] ; ss
-    ; mov ss, eax
-    ; mov eax, [ecx + 60] ; cs
-    ; mov cs, eax
-
     ; Load general-purpose registers
     mov ebx, [ecx + 16]  ; ebx
     mov edx, [ecx + 20]  ; edx
     mov eax, [ecx + 28]  ; eax
     mov ecx, [ecx + 24]  ; ecx
-    
-    ; Load the new page directory base address (CR3)
-    ; mov eax, [ecx + 48] ; page_directory_virtual_addr
-    ; mov cr3, eax
 
     ; 4. Cleanup operasi register yang tersisa jika ada
     ; Tidak ada operasi register
 
     ; 5. Lakukan jump ke process dengan iret
     iret
-
-    ; Restore saved segment registers 
-    ; pop gs
-    ; pop fs
-    ; pop es
-    ; pop ds
     

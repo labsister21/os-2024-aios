@@ -13,7 +13,10 @@ void ps(int argc){
     syscall(12, (uint32_t) process_list, 0, 0);
     print("Active Processes: \n", 0xF);
     char str[10];
-    for (int i = 0; i < 16; i++) {
+    if (process_list[0] != -1) {
+        print("pid: 0\n", 0xF);
+    }
+    for (int i = 1; i < 16; i++) {
         if (process_list[i] != -1) {
             int_to_string(str, process_list[i]);
             print("pid: ", 0xF);

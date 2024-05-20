@@ -54,7 +54,12 @@ void main_interrupt_handler(struct InterruptFrame frame){
             break;
         case PIC1_OFFSET + IRQ_TIMER:
             //copy frame ke context variable
-            memcpy(&currentContext, &frame, sizeof(struct Context));
+            currentContext.cpu = frame.cpu;
+            currentContext.eip = frame.int_stack.eip;
+            currentContext.eflags = frame.int_stack.eflags;
+            currentContext.cs = frame.int_stack.cs;
+            currentContext.ss = 0x20 | 0x3;
+            currentContext.page_directory_virtual_addr = paging_get_current_page_directory_addr();
             //save current context ke running pcb
             scheduler_save_context_to_current_running_pcb(currentContext);
             //switch to next process (process context switch)
@@ -132,7 +137,7 @@ void syscall(struct InterruptFrame frame) {
         case 12:
             // get Process information
             for (int i = 0; i < 16; i++) {
-                if (_process_list[i].metadata.state != KILLED) {
+                if (process_manager_state.used_process[i]) {
                     ((int*) frame.cpu.general.ebx)[i] = _process_list[i].metadata.pid;
                 }
             }
@@ -142,5 +147,7 @@ void syscall(struct InterruptFrame frame) {
             *(unsigned char*)frame.cpu.general.ebx = hour;
             *(unsigned char*)frame.cpu.general.ecx = minute;
             *(unsigned char*)frame.cpu.general.edx = second;
+        case 14:
+            framebuffer_write((uint8_t)frame.cpu.general.ebx, (uint8_t)frame.cpu.general.ecx, *((char*)frame.cpu.general.edx), 0xF, 0);
     }
 }
