@@ -136,7 +136,7 @@ bool paging_allocate_check(uint32_t amount);
  * @param virtual_addr Virtual address to be allocated
  * @return             Physical address of allocated frame
  */
-bool paging_allocate_user_page_frame(struct PageDirectory *page_dir, void *virtual_addr);
+void* paging_allocate_user_page_frame(struct PageDirectory *page_dir, void *virtual_addr);
 
 /**
  * Deallocate single user page frame in page directory

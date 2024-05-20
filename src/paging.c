@@ -112,7 +112,7 @@ bool paging_allocate_check(uint32_t amount) {
 }
 
 
-bool paging_allocate_user_page_frame(struct PageDirectory *page_dir, void *virtual_addr) {
+void* paging_allocate_user_page_frame(struct PageDirectory *page_dir, void *virtual_addr) {
     // Find a free physical frame
     for (size_t i = 0; i < PAGE_FRAME_MAX_COUNT; ++i) {
         if (!page_manager_state.page_frame_map[i])
@@ -132,10 +132,10 @@ bool paging_allocate_user_page_frame(struct PageDirectory *page_dir, void *virtu
             // Update page directory entry
             void *physical_addr = (void*)(i*PAGE_FRAME_SIZE);
             update_page_directory_entry(page_dir, physical_addr, virtual_addr, flag);
-            return true;
+            return physical_addr;
         }
     }
-    return false;
+    return 0;
 }
 
 bool paging_free_user_page_frame(struct PageDirectory *page_dir, void *virtual_addr) {

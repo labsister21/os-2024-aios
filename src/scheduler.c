@@ -73,7 +73,7 @@ __attribute__((noreturn)) void scheduler_switch_to_next_process(void){
         }
     }
     _process_list[running_process_idx].metadata.state = READY;
-    struct ProcessControlBlock pickedProcess = _process_list[pilihan];
+    struct ProcessControlBlock* pickedProcess = &_process_list[pilihan];
     running_process_idx = pilihan;
     _process_list[running_process_idx].metadata.state = RUNNING;
     
@@ -81,8 +81,8 @@ __attribute__((noreturn)) void scheduler_switch_to_next_process(void){
     pic_ack(IRQ_TIMER + PIC1_OFFSET);
 
     // use page directory dari pcb --> ganti register cr3
-    paging_use_page_directory(&(pickedProcess.context.page_directory_virtual_addr));
+    paging_use_page_directory(pickedProcess->context.page_directory_virtual_addr);
 
     // context switch
-    process_context_switch(pickedProcess.context);
+    process_context_switch(pickedProcess->context);
 }

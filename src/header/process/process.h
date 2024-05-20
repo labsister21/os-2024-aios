@@ -56,9 +56,11 @@
  */
 struct Context {
     struct CPURegister      cpu;
-    uint32_t                eip;
     uint32_t                eflags;
-    struct PageDirectory    page_directory_virtual_addr;
+    uint32_t                eip;
+    uint32_t                ss;
+    uint32_t                cs;
+    struct PageDirectory*    page_directory_virtual_addr;
 } __attribute__((packed));
 
 typedef enum PROCESS_STATE {
@@ -87,6 +89,11 @@ struct ProcessControlBlock {
         void     *virtual_addr_used[PROCESS_PAGE_FRAME_COUNT_MAX];
         uint32_t page_frame_used_count;
     } memory;
+};
+
+struct ProcessManagerState {
+    bool used_process[PROCESS_COUNT_MAX];
+    uint32_t active_process_count;
 };
 
 /**
@@ -120,6 +127,6 @@ int32_t process_generate_new_pid();
 
 uint32_t ceil_div(uint32_t x, uint32_t y);
 
-extern struct PageManagerState process_manager_state;
+extern struct ProcessManagerState process_manager_state;
 extern struct ProcessControlBlock _process_list[PROCESS_COUNT_MAX];
 #endif

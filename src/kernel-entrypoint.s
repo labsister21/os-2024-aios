@@ -124,20 +124,10 @@ process_context_switch:
     lea ecx, [esp + 4] ;
 
     ; 2. Lanjutkan dengan setup iret stack dengan push
-    push ds
-    push es
-    push fs
-    push gs
-    
-    ; 3. Load semua register dari ctx
-
-    ; Load index registers
-    mov edi, [ecx + 0]  ; edi
-    mov esi, [ecx + 4]  ; esi
-
-    ; Load stack registers
-    mov ebp, [ecx + 8]  ; ebp
-    mov esp, [ecx + 12] ; esp
+    ; push ds
+    ; push es
+    ; push fs
+    ; push gs
 
     ; Load segment registers
     mov eax, [ecx + 32] ; gs
@@ -152,6 +142,21 @@ process_context_switch:
     ; Save eflags and eip
     push dword [ecx + 48] ; eflags
     push dword [ecx + 52] ; eip
+    
+    ; 3. Load semua register dari ctx
+
+    ; Load index registers
+    mov edi, [ecx + 0]  ; edi
+    mov esi, [ecx + 4]  ; esi
+
+    ; Load stack registers
+    mov ebp, [ecx + 8]  ; ebp
+
+    ; Load extra registers
+    ; mov eax, [ecx + 56] ; ss
+    ; mov ss, eax
+    ; mov eax, [ecx + 60] ; cs
+    ; mov cs, eax
 
     ; Load general-purpose registers
     mov ebx, [ecx + 16]  ; ebx
@@ -170,8 +175,8 @@ process_context_switch:
     iret
 
     ; Restore saved segment registers 
-    pop gs
-    pop fs
-    pop es
-    pop ds
+    ; pop gs
+    ; pop fs
+    ; pop es
+    ; pop ds
     

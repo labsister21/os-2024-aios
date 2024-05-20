@@ -4,7 +4,7 @@
 #include "header/process/process.h"
 
 
-struct PageManagerState process_manager_state;
+struct ProcessManagerState process_manager_state;
 struct ProcessControlBlock _process_list[PROCESS_COUNT_MAX] = {0};
 
 struct ProcessControlBlock* process_get_current_running_pcb_pointer(void) {
@@ -37,7 +37,17 @@ int32_t process_create_user_process(struct FAT32DriverRequest request) {
     }
 
     // Process PCB
+    struct PageDirectory *current_pagedir = paging_get_current_page_directory_addr();
     struct PageDirectory* pagedir = paging_create_new_page_directory();
+    void* pagingProcess = paging_allocate_user_page_frame(pagedir, request.buf);
+    void* paging = paging_allocate_user_page_frame(pagedir, (void *)0xBFFFFFFC);
+
+    if(!(paging && pagingProcess)) {
+        retcode = PROCESS_CREATE_FAIL_PAGING_ALLOC_FAILURE;
+        goto exit_cleanup;
+    }
+
+    paging_use_page_directory(pagedir);
 
     int8_t readfsStatus = read(request);
     if(readfsStatus != 0) {
@@ -45,22 +55,30 @@ int32_t process_create_user_process(struct FAT32DriverRequest request) {
         goto exit_cleanup;
     }
 
-    bool pagingStatus = paging_allocate_user_page_frame(pagedir, request.buf);
-    if(!pagingStatus) {
-        retcode = PROCESS_CREATE_FAIL_PAGING_ALLOC_FAILURE;
-        goto exit_cleanup;
-    }
 
     int32_t p_index = process_list_get_inactive_index();
     struct ProcessControlBlock *new_pcb = &(_process_list[p_index]);
+    process_manager_state.used_process[p_index] = true;
+    process_manager_state.active_process_count++;
 
-    new_pcb->context.eip = 0;
+    new_pcb->memory.virtual_addr_used[0] = pagingProcess + KERNEL_VIRTUAL_ADDRESS_BASE;;
+    new_pcb->memory.virtual_addr_used[1] = paging + KERNEL_VIRTUAL_ADDRESS_BASE;;
+    new_pcb->memory.page_frame_used_count = 2;
+    new_pcb->context.eip = (uint32_t)request.buf;
+    new_pcb->context.cpu.stack.ebp = 0xBFFFFFFC;
+    new_pcb->context.cpu.stack.esp = 0xBFFFFFFC;
     new_pcb->context.eflags |= CPU_EFLAGS_BASE_FLAG | CPU_EFLAGS_FLAG_INTERRUPT_ENABLE;
-    new_pcb->context.page_directory_virtual_addr = *pagedir;
-
+    new_pcb->context.cpu.segment.gs = 0x20 | 0x3;
+    new_pcb->context.cpu.segment.fs = 0x20 | 0x3;
+    new_pcb->context.cpu.segment.es = 0x20 | 0x3;
+    new_pcb->context.cpu.segment.ds = 0x20 | 0x3;
+    new_pcb->context.ss = 0x20 | 0x3;
+    new_pcb->context.cs = 0x18 | 0x3;
+    new_pcb->context.page_directory_virtual_addr = pagedir;
     new_pcb->metadata.pid = process_generate_new_pid();
     new_pcb->metadata.state = READY;
     process_manager_state.active_process_count++;
+    paging_use_page_directory(current_pagedir);
 exit_cleanup:
     return retcode;
 }

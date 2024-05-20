@@ -17,15 +17,15 @@ unsigned char get_RTC_register(int reg){
     return in(CMOS_DATA);
 }
 void read_rtc() {
-    unsigned char century;
-    unsigned char last_second;
-    unsigned char last_minute;
-    unsigned char last_hour;
-    unsigned char last_day;
-    unsigned char last_month;
-    unsigned char last_year;
-    unsigned char last_century;
-    unsigned char registerB;
+    unsigned char century = '\0';
+    unsigned char last_second = '\0';
+    unsigned char last_minute = '\0';
+    unsigned char last_hour = '\0';
+    unsigned char last_day = '\0';
+    unsigned char last_month = '\0';
+    unsigned char last_year = '\0';
+    unsigned char last_century = '\0';
+    unsigned char registerB = '\0';
 
     // Note: This uses the "read registers until you get the same values twice in a row" technique
     //       to avoid getting dodgy/inconsistent values due to RTC updates

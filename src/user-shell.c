@@ -158,19 +158,19 @@ int currentDirectory = ROOT_CLUSTER_NUMBER;
 struct FAT32DirectoryTable dirTable;
 
 int main(void) {
-    struct ClusterBuffer      cl[12]   = {0};
-    struct FAT32DriverRequest request = {
-        .buf                   = &cl,
-        .name                  = "shell",
-        .ext                   = "\0\0\0",
-        .parent_cluster_number = ROOT_CLUSTER_NUMBER,
-        .buffer_size           = 12*CLUSTER_SIZE,
-    };
-    int32_t retcode;
-    syscall(0, (uint32_t) &request, (uint32_t) &retcode, 0);
-    if (retcode == 0)
-        // syscall(6, (uint32_t) "owo\n", 4, 0xF);
-        print("owo\n", 0xF);
+//     struct ClusterBuffer      cl[12]   = {0};
+//     struct FAT32DriverRequest request = {
+//         .buf                   = &cl,
+//         .name                  = "shell",
+//         .ext                   = "\0\0\0",
+//         .parent_cluster_number = ROOT_CLUSTER_NUMBER,
+//         .buffer_size           = 12*CLUSTER_SIZE,
+//     };
+//     int32_t retcode;
+//     syscall(0, (uint32_t) &request, (uint32_t) &retcode, 0);
+//     if (retcode == 0)
+//         // syscall(6, (uint32_t) "owo\n", 4, 0xF);
+//         print("owo\n", 0xF);
 
     updateDirectoryTable(currentDirectory);
     char line[128];
