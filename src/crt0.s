@@ -1,4 +1,4 @@
-; global _start
+global _start
 extern main
 
 ; section .text
