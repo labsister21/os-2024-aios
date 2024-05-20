@@ -8,6 +8,7 @@
 #include "header/stdlib/string.h"
 #include "header/process/process.h"
 #include "header/driver/cmos.h"
+#include "header/stdlib/string.h"
 
 void io_wait(void){
     out(0x80, 0);
@@ -150,6 +151,9 @@ void syscall(struct InterruptFrame frame) {
             break;
         case 14:
             framebuffer_write((uint8_t)frame.cpu.general.ebx, (uint8_t)frame.cpu.general.ecx, *((char*)frame.cpu.general.edx), 0xF, 0);
+            break;
+        case 15:
+            memcpy((char*)frame.cpu.general.ebx, &(_process_list[(uint32_t) frame.cpu.general.ecx].metadata.name), 10);
             break;
     }
 }

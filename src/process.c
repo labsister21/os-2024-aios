@@ -75,6 +75,8 @@ int32_t process_create_user_process(struct FAT32DriverRequest request) {
     new_pcb->context.cs = 0x18 | 0x3;
     new_pcb->context.page_directory_virtual_addr = pagedir;
     new_pcb->metadata.pid = p_index;
+    memcpy(new_pcb->metadata.name, "\0\0\0\0\0\0\0\0\0", 10);
+    memcpy(new_pcb->metadata.name, request.name, 8);
     new_pcb->metadata.state = READY;
     paging_use_page_directory(current_pagedir);
     process_manager_state.active_process_count++;

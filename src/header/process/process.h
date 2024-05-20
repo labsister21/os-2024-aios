@@ -80,6 +80,7 @@ typedef enum PROCESS_STATE {
 struct ProcessControlBlock {
     struct {
         uint32_t                pid;
+        char                    name[10];
         enum PROCESS_STATE      state;
     } metadata;
 
