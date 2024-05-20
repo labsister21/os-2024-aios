@@ -1,3 +1,15 @@
 {
     "debug.onTaskErrors": "debugAnyway",
+    "files.associations": {
+        "gdt.h": "c",
+        "user-shell.h": "c",
+        "cd.h": "c",
+        "fat32.h": "c",
+        "cat.h": "c",
+        "process.h": "c",
+        "kill.h": "c",
+        "exec.h": "c",
+        "interrupt.h": "c",
+        "framebuffer.h": "c"
+    },
 }
