@@ -21,7 +21,12 @@
 
 
 ## General Information
-aiOS Project
+Tugas besar ini akan menjadi introductory to kernel development dan melihatkan secara konkrit subsistem yang ada pada sistem operasi. Target platform sistem operasi adalah x86 32-bit Protected Mode yang nanti akan dijalankan dengan QEMU. Berikut adalah topik IF2230 - 2024
+- Chapter 0: Toolchain, Kernel, GDT
+- Chapter 1: Interrupt, Driver, File System
+- Chapter 2: Paging, User Mode, Shell
+- Chapter 3: Process, Scheduler, Multitasking
+
 
 
 ## Project Status
