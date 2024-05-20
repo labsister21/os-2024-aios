@@ -37,6 +37,14 @@ void go_scroll()
 {
     memcpy(FRAMEBUFFER_MEMORY, FRAMEBUFFER_MEMORY + 80 * 2, 80 * 2 * 25 - 80 * 2);
     framebuffer_current_state.row--;
+    framebuffer_write(23, 72, '\0', 0xF, 0);
+    framebuffer_write(23, 73, '\0', 0xF, 0);
+    framebuffer_write(23, 74, '\0', 0xF, 0);
+    framebuffer_write(23, 75, '\0', 0xF, 0);
+    framebuffer_write(23, 76, '\0', 0xF, 0);
+    framebuffer_write(23, 77, '\0', 0xF, 0);
+    framebuffer_write(23, 78, '\0', 0xF, 0);
+    framebuffer_write(23, 79, '\0', 0xF, 0);
     for (int i = 0; i < 80; i++)
     {
         framebuffer_write(framebuffer_current_state.row, i, '\0', 0xF, 0);

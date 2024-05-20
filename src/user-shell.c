@@ -173,8 +173,8 @@ int main(void) {
 //         print("owo\n", 0xF);
 
     updateDirectoryTable(currentDirectory);
-    char line[128];
-    for (int i = 0; i < 128; i++) {
+    char line[2000];
+    for (int i = 0; i < 2000; i++) {
         line[i] = 0;
     }
     int linelen;
@@ -187,7 +187,7 @@ int main(void) {
         printDir();
 
         // Reset line to empty
-        for (int i = 0; i < 128; i++) {
+        for (int i = 0; i < 2000; i++) {
             line[i] = 0;
         }
         buf = 0;
@@ -279,6 +279,9 @@ int main(void) {
 			ps(argc);
         } else if (memcmp(argv[0], "kill", 5) == 0) {
 			kill(argv, argc);
+        } else if (memcmp(argv[0], "clock", 5) == 0) {
+            memcpy(argv[1], argv[0], 100);
+            exec(argv, 2);
         } else if (argc == 0) {
             // Do nothing
         } else {
