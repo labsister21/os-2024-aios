@@ -53,9 +53,13 @@ kernel:
 clock:
 	@$(CC) $(CFLAGS) $(SOURCE_FOLDER)/clock.c -o clock.o
 	@$(CC) $(CFLAGS) $(SOURCE_FOLDER)/stdlib/string.c -o string.o
+	@$(ASM) $(AFLAGS) $(SOURCE_FOLDER)/crt0.s -o crt0.o
 	@$(LIN) -T $(SOURCE_FOLDER)/user-linker.ld -melf_i386 --oformat=elf32-i386 \
-		clock.o string.o -o $(OUTPUT_FOLDER)/clock
+		crt0.o clock.o string.o -o $(OUTPUT_FOLDER)/clock_elf
 	@echo Linking object files and generate clock
+	@$(LIN) -T $(SOURCE_FOLDER)/user-linker.ld -melf_i386 --oformat=binary \
+		crt0.o clock.o string.o -o $(OUTPUT_FOLDER)/clock
+	@echo Linking object clock object files and generate flat binary...
 	@rm -f *.o
 
 inserter:
