@@ -147,7 +147,9 @@ void syscall(struct InterruptFrame frame) {
             *(unsigned char*)frame.cpu.general.ebx = hour;
             *(unsigned char*)frame.cpu.general.ecx = minute;
             *(unsigned char*)frame.cpu.general.edx = second;
+            break;
         case 14:
             framebuffer_write((uint8_t)frame.cpu.general.ebx, (uint8_t)frame.cpu.general.ecx, *((char*)frame.cpu.general.edx), 0xF, 0);
+            break;
     }
 }
